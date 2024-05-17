@@ -43,7 +43,7 @@ bash 'get slurm from s3' do
   cwd "#{node['cluster']['sources_dir']}"
   code <<-SLURM
     set -e
-    aws s3 cp #{node['cluster']['artifacts_build_url']}/slurm/#{slurm_tar_name}.tar.gz #{slurm_tarball}
+    aws s3 cp #{node['cluster']['artifacts_build_url']}/slurm/#{slurm_tar_name}.tar.gz #{slurm_tarball} --region #{node['cluster']['region']}
     chmod 644 #{slurm_tarball}
     SLURM
   retries 3

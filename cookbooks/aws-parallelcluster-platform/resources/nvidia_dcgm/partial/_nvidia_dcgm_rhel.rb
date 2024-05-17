@@ -18,7 +18,7 @@ action :install_package do
     user 'root'
     code <<-DCGM_INSTALL
     set -e
-    aws s3 cp #{dcgm_url} #{dcgm_package}-#{package_version}.rpm
+    aws s3 cp #{dcgm_url} #{dcgm_package}-#{package_version}.rpm --region #{node['cluster']['region']}
     yum install -y #{dcgm_package}-#{package_version}.rpm
     DCGM_INSTALL
     retries 3

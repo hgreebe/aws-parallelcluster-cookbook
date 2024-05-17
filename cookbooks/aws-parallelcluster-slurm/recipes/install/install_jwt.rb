@@ -24,7 +24,7 @@ bash 'get jwt from s3' do
   cwd "#{node['cluster']['sources_dir']}"
   code <<-JWT
     set -e
-    aws s3 cp #{node['cluster']['artifacts_build_url']}/jwt/v#{jwt_version}.tar.gz #{jwt_tarball}
+    aws s3 cp #{node['cluster']['artifacts_build_url']}/jwt/v#{jwt_version}.tar.gz #{jwt_tarball} --region #{node['cluster']['region']}
     chmod 644 #{jwt_tarball}
     JWT
     retries 3

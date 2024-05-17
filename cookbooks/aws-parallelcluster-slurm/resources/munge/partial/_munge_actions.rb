@@ -66,7 +66,7 @@ action :download_source_code do
     cwd "#{node['cluster']['sources_dir']}"
     code <<-MUNGE
     set -e
-    aws s3 cp #{node['cluster']['artifacts_build_url']}/munge/munge-#{munge_version}.tar.gz #{munge_tarball}
+    aws s3 cp #{node['cluster']['artifacts_build_url']}/munge/munge-#{munge_version}.tar.gz #{munge_tarball} --region #{node['cluster']['region']}
     chmod 644 #{munge_tarball}
     MUNGE
     retries 3

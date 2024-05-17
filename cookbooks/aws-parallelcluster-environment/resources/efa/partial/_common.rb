@@ -61,7 +61,7 @@ action :download_and_install do
     cwd "#{node['cluster']['sources_dir']}"
     code <<-EFA
     set -e
-    aws s3 cp #{node['cluster']['artifacts_build_url']}/efa/aws-efa-installer-#{new_resource.efa_version}.tar.gz #{efa_tarball}
+    aws s3 cp #{node['cluster']['artifacts_build_url']}/efa/aws-efa-installer-#{new_resource.efa_version}.tar.gz #{efa_tarball} --region #{node['cluster']['region']}
     chmod 0644 #{efa_tarball}
     EFA
     retries 3

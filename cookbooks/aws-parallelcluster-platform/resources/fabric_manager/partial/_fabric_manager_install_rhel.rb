@@ -18,7 +18,7 @@ action :install_package do
     user 'root'
     code <<-FABRIC_MANAGER_INSTALL
     set -e
-    aws s3 cp #{fabric_manager_url} #{fabric_manager_package}-#{fabric_manager_version}.rpm
+    aws s3 cp #{fabric_manager_url} #{fabric_manager_package}-#{fabric_manager_version}.rpm --region #{node['cluster']['region']}
     yum install -y #{fabric_manager_package}-#{fabric_manager_version}.rpm
     yum versionlock #{fabric_manager_package}
     FABRIC_MANAGER_INSTALL

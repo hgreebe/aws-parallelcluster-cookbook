@@ -25,7 +25,7 @@ bash 'get pmix from s3' do
   cwd "#{node['cluster']['sources_dir']}"
   code <<-PMIX
     set -e
-    aws s3 cp #{node['cluster']['artifacts_build_url']}/pmix/pmix-#{pmix_version}.tar.gz #{pmix_tarball}
+    aws s3 cp #{node['cluster']['artifacts_build_url']}/pmix/pmix-#{pmix_version}.tar.gz #{pmix_tarball} --region #{node['cluster']['region']}
     chmod 644 #{pmix_tarball}
     PMIX
   retries 3

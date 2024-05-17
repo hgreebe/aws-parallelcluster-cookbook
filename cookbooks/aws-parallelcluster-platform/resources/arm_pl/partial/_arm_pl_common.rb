@@ -120,7 +120,7 @@ action :setup do
     cwd "#{node['cluster']['sources_dir']}"
     code <<-GCC
     set -e
-    aws s3 cp #{node['cluster']['artifacts_build_url']}/gcc/gcc-#{gcc_version}.tar.gz #{gcc_tarball}
+    aws s3 cp #{node['cluster']['artifacts_build_url']}/gcc/gcc-#{gcc_version}.tar.gz #{gcc_tarball} --region #{node['cluster']['region']}
     chmod 644 #{gcc_tarball}
     GCC
     retries 5

@@ -33,7 +33,7 @@ action :setup do
     cwd "#{node['cluster']['sources_dir']}"
     code <<-NVIDIA
     set -e
-    aws s3 cp #{node['cluster']['artifacts_build_url']}/nvidia_driver/NVIDIA-Linux-#{nvidia_arch}-#{_nvidia_driver_version}.run #{tmp_nvidia_run}
+    aws s3 cp #{node['cluster']['artifacts_build_url']}/nvidia_driver/NVIDIA-Linux-#{nvidia_arch}-#{_nvidia_driver_version}.run #{tmp_nvidia_run} --region #{node['cluster']['region']}
     chmod 755 #{tmp_nvidia_run}
     NVIDIA
     retries 3

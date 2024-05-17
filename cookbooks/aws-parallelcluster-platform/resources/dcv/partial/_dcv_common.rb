@@ -160,7 +160,7 @@ action :setup do
         cwd "#{node['cluster']['sources_dir']}"
         code <<-DCV
         set -e
-        aws s3 cp #{dcv_url} #{dcv_tarball}
+        aws s3 cp #{dcv_url} #{dcv_tarball} --region #{node['cluster']['region']}
         chmod 644 #{dcv_tarball}
         DCV
         retries 3

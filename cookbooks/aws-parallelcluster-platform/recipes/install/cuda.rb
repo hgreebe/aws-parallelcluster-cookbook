@@ -38,7 +38,7 @@ bash 'Get CUDA run file from s3' do
   cwd "#{node['cluster']['sources_dir']}"
   code <<-CUDA
     set -e
-    aws s3 cp #{node['cluster']['artifacts_build_url']}/cuda/cuda_#{cuda_complete_version}_#{cuda_version_suffix}_#{cuda_arch}.run #{tmp_cuda_run}
+    aws s3 cp #{node['cluster']['artifacts_build_url']}/cuda/cuda_#{cuda_complete_version}_#{cuda_version_suffix}_#{cuda_arch}.run #{tmp_cuda_run} --region #{node['cluster']['region']}
     chmod 755 #{tmp_cuda_run}
     CUDA
   not_if { ::File.exist?("/usr/local/cuda-#{cuda_version}") }
@@ -65,7 +65,7 @@ bash 'get CUDA Sample Files from s3' do
   cwd "#{node['cluster']['sources_dir']}"
   code <<-CUDA
     set -e
-    aws s3 cp #{node['cluster']['artifacts_build_url']}/cuda/samples/v#{cuda_samples_version}.tar.gz #{tmp_cuda_sample_archive}
+    aws s3 cp #{node['cluster']['artifacts_build_url']}/cuda/samples/v#{cuda_samples_version}.tar.gz #{tmp_cuda_sample_archive} --region #{node['cluster']['region']}
     chmod 644 #{tmp_cuda_sample_archive}
     CUDA
   not_if { ::File.exist?("/usr/local/cuda-#{cuda_version}/samples") }

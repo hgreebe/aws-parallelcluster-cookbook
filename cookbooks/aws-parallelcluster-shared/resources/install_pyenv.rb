@@ -43,7 +43,7 @@ action :run do
       cwd "#{prefix}"
       code <<-VENV
       set -e
-      aws s3 cp #{node['cluster']['artifacts_build_url']}/python/Python-#{python_version}.tgz Python-#{python_version}.tgz
+      aws s3 cp #{node['cluster']['artifacts_build_url']}/python/Python-#{python_version}.tgz Python-#{python_version}.tgz --region #{node['cluster']['region']}
       tar -xzf Python-#{python_version}.tgz
       cd Python-#{python_version}
       ./configure --prefix=#{prefix}/versions/#{python_version}
