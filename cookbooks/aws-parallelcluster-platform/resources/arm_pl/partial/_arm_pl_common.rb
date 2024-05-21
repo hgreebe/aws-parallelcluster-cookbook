@@ -55,7 +55,7 @@ action :setup do
   armpl_tarball_name = "arm-performance-libraries_#{armpl_version}_#{armpl_platform}_gcc-#{gcc_major_minor_version}.tar"
 
   armpl_url = %W(
-    s3://aws-parallelcluster-dev-build-dependencies
+    #{node['cluster']['base_build_url']}
     archives/armpl/#{armpl_platform}
     #{armpl_tarball_name}
   ).join('/')

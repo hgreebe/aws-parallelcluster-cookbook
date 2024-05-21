@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 action :setup do
-  mysql_archive_url = package_archive("s3://aws-parallelcluster-dev-build-dependencies/archives/msql")
+  mysql_archive_url = package_archive("#{node['cluster']['base_build_url']}/archives/msql")
   mysql_tar_file = "/tmp/#{package_filename}"
 
   log "Downloading MySQL packages archive from #{mysql_archive_url}"
