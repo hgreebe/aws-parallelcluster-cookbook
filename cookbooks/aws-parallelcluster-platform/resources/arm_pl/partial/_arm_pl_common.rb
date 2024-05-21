@@ -55,7 +55,7 @@ action :setup do
   armpl_tarball_name = "arm-performance-libraries_#{armpl_version}_#{armpl_platform}_gcc-#{gcc_major_minor_version}.tar"
 
   armpl_url = %W(
-    https://#{new_resource.region}-aws-parallelcluster.s3.#{new_resource.region}.#{new_resource.aws_domain}
+    s3://aws-parallelcluster-dev-build-dependencies
     archives/armpl/#{armpl_platform}
     #{armpl_tarball_name}
   ).join('/')
@@ -65,12 +65,17 @@ action :setup do
   armpl_name = "arm-performance-libraries_#{armpl_version}_#{armpl_platform}"
 
   # download ArmPL tarball
-  remote_file armpl_installer do
-    source armpl_url
-    mode '0644'
-    retries 3
-    retry_delay 5
-    not_if { ::File.exist?("/opt/arm/armpl/#{armpl_version}") }
+  bash 'get armpl from s3' do
+    user 'root'
+    group 'root'
+    cwd "#{node['cluster']['sources_dir']}"
+    code <<-GCC
+    set -e
+    aws s3 cp #{armpl_url} #{armpl_installer} --region #{node['cluster']['region']}
+    chmod 644 #{armpl_installer}
+    GCC
+    retries 5
+    retry_delay 10
   end
 
   bash "install arm performance library" do

@@ -29,7 +29,7 @@ intelmpi_full_version = "#{intelmpi_version}.43482"
 intelmpi_installation_path = "/opt/intel/mpi/#{intelmpi_version}"
 intelmpi_installer = "l_mpi_oneapi_p_#{intelmpi_full_version}_offline.sh"
 intelmpi_installer_path = "#{node['cluster']['sources_dir']}/#{intelmpi_installer}"
-intelmpi_installer_url = "https://#{node['cluster']['region']}-aws-parallelcluster.s3.#{node['cluster']['region']}.#{aws_domain}/archives/impi/#{intelmpi_installer}"
+intelmpi_installer_url = "s3://aws-parallelcluster-dev-build-dependencies/archives/impi/#{intelmpi_installer}"
 intelmpi_qt_version = '6.4.2'
 
 # Prerequisite for module install
@@ -39,12 +39,17 @@ directory node['cluster']['sources_dir'] do
 end
 
 # fetch intelmpi installer script
-remote_file intelmpi_installer_path do
-  source intelmpi_installer_url
-  mode '0744'
-  retries 3
-  retry_delay 5
-  not_if { ::File.exist?(intelmpi_installation_path.to_s) }
+bash 'get intelmpi from s3' do
+  user 'root'
+  group 'root'
+  cwd "#{node['cluster']['sources_dir']}"
+  code <<-GCC
+    set -e
+    aws s3 cp #{intelmpi_installer_url} #{intelmpi_installer_path} --region #{node['cluster']['region']}
+    chmod 744 #{intelmpi_installer_path}
+    GCC
+  retries 5
+  retry_delay 10
 end
 
 bash "install intel mpi" do
