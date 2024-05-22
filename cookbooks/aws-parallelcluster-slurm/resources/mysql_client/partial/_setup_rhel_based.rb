@@ -26,11 +26,11 @@ action :setup do
     user 'root'
     group 'root'
     cwd "#{node['cluster']['sources_dir']}"
-    code <<-GCC
+    code <<-MYSQL
     set -e
-    aws s3 cp mysql_archive_url #{mysql_tar_file} --region #{node['cluster']['region']}
+    aws s3 cp #{mysql_archive_url} #{mysql_tar_file} --region #{node['cluster']['region']}
     chmod 644 #{mysql_tar_file}
-    GCC
+    MYSQL
     retries 5
     retry_delay 10
   end
