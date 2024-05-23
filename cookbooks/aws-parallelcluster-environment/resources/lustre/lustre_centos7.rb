@@ -113,10 +113,10 @@ end
 
 action_class do
   def base_url
-    "https://fsx-lustre-client-repo.s3.amazonaws.com/#{base_url_prefix(arm_instance?)}/7.#{find_centos_minor_version}/#{node['kernel']['machine']}/"
+    "https://fsx-lustre-client-repo.s3.#{aws_region}.#{aws_domain}/#{base_url_prefix(arm_instance?)}/7.#{find_centos_minor_version}/#{node['kernel']['machine']}/"
   end
 
   def public_key
-    "https://fsx-lustre-client-repo-public-keys.s3.amazonaws.com/fsx-rpm-public-key.asc"
+    "https://fsx-lustre-client-repo-public-keys.s3.#{aws_region}.#{aws_domain}/fsx-rpm-public-key.asc"
   end
 end

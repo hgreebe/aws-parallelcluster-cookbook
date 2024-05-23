@@ -15,9 +15,9 @@
 
 action :setup do
   apt_repository 'fsxlustreclientrepo' do
-    uri          "https://fsx-lustre-client-repo.s3.amazonaws.com/ubuntu"
+    uri          "https://fsx-lustre-client-repo.s3.#{aws_region}.#{aws_domain}/ubuntu"
     components   ['main']
-    key          "https://fsx-lustre-client-repo-public-keys.s3.amazonaws.com/fsx-ubuntu-public-key.asc"
+    key          "https://fsx-lustre-client-repo-public-keys.s3.#{aws_region}.#{aws_domain}/fsx-ubuntu-public-key.asc"
     retries 3
     retry_delay 5
   end
