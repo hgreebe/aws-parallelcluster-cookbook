@@ -30,3 +30,7 @@ end
 def platform
   "ubuntu#{node['platform_version'].delete('.')}"
 end
+
+def platform
+  "ubuntu#{node['platform_version'].delete('.')}"
+end

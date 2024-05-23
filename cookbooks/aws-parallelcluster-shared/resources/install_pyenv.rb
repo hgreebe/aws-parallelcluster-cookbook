@@ -4,10 +4,12 @@ provides :install_pyenv
 unified_mode true
 
 # Resource:: to create a Python virtual environment for a given user
-property :user_only, [true, false], default: false
-property :user, String
+
 property :python_version, String
 property :prefix, String
+property :user_only, [true, false], default: false
+property :user, String
+
 default_action :run
 
 action :run do
@@ -28,15 +30,6 @@ action :run do
   directory prefix do
     recursive true
   end
-
-  remote_file "#{prefix}/Python-#{python_version}.tgz" do
-    source python_url
-    mode '0644'
-    retries 3
-    retry_delay 5
-    action :create_if_missing
-  end
-
   user = new_resource.user || 'root'
 
   bash "install python #{python_version}" do
@@ -45,6 +38,7 @@ action :run do
     cwd "#{prefix}"
     code <<-VENV
     set -e
+    aws s3 cp #{node['cluster']['artifacts_build_url']}/python/Python-#{python_version}.tgz Python-#{python_version}.tgz --region #{node['cluster']['region']}
     tar -xzf Python-#{python_version}.tgz
     cd Python-#{python_version}
     ./configure --prefix=#{prefix}/versions/#{python_version}

@@ -14,21 +14,19 @@
 
 action :install_package do
   # For ubuntu, CINC17 apt-package resources need full versions for `version`
-  remote_file "#{node['cluster']['sources_dir']}/#{fabric_manager_package}-#{fabric_manager_version}.deb" do
-    source "#{fabric_manager_url}"
-    mode '0644'
-    retries 3
-    retry_delay 5
-    action :create_if_missing
-  end
+  execute "install_fabricmanager_for_ubuntu" do
+    bash "Install #{fabric_manager_package}" do
+      user 'root'
+      code <<-FABRIC_MANAGER
+      set -e
+      aws s3 cp #{fabric_manager_url} #{fabric_manager_package}-#{fabric_manager_version}.deb
+      FABRIC_MANAGER
+      retries 3
+      retry_delay 5
+    end
 
-  bash "install_fabricmanager_for_ubuntu" do
-    user 'root'
-    cwd node['cluster']['sources_dir']
-    code <<-FABRIC_MANAGER
-    set -e
-    dpkg -i #{fabric_manager_package}-#{fabric_manager_version}.deb && apt-mark hold #{fabric_manager_package}
-    FABRIC_MANAGER
+    command "apt -y install #{fabric_manager_package}-#{fabric_manager_version}.deb "\
+            "&& apt-mark hold #{fabric_manager_package}"
     retries 3
     retry_delay 5
   end
@@ -39,5 +37,5 @@ def arch_suffix
 end
 
 def fabric_manager_url
-  "#{node['cluster']['artifacts_s3_url']}/dependencies/nvidia_fabric/#{platform}/#{fabric_manager_package}_#{fabric_manager_version}-1_#{arch_suffix}.deb"
+  "#{node['cluster']['artifacts_build_url']}/nvidia_fabric/#{platform}/#{fabric_manager_package}_#{fabric_manager_version}-1_#{arch_suffix}.deb"
 end

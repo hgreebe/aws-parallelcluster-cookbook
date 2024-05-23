@@ -21,12 +21,9 @@ action :setup do
   return unless _nvidia_dcgm_enabled
 
   action_install_package
+
 end
 
 def _nvidia_enabled
   nvidia_enabled.nil? ? ['yes', true].include?(node['cluster']['nvidia']['enabled']) : nvidia_enabled
-end
-
-def package_version
-  node['cluster']['nvidia']['dcgm_version']
 end
