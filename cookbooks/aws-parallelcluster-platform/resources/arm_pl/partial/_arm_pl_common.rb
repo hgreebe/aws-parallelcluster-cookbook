@@ -55,7 +55,7 @@ action :setup do
   armpl_tarball_name = "arm-performance-libraries_#{armpl_version}_#{armpl_platform}_gcc-#{gcc_major_minor_version}.tar"
 
   armpl_url = %W(
-    https://#{new_resource.region}-aws-parallelcluster.s3.#{new_resource.region}.#{new_resource.aws_domain}
+    #{node['cluster']['base_build_url']}
     archives/armpl/#{armpl_platform}
     #{armpl_tarball_name}
   ).join('/')
@@ -65,12 +65,17 @@ action :setup do
   armpl_name = "arm-performance-libraries_#{armpl_version}_#{armpl_platform}"
 
   # download ArmPL tarball
-  remote_file armpl_installer do
-    source armpl_url
-    mode '0644'
-    retries 3
-    retry_delay 5
-    not_if { ::File.exist?("/opt/arm/armpl/#{armpl_version}") }
+  bash 'get armpl from s3' do
+    user 'root'
+    group 'root'
+    cwd "#{node['cluster']['sources_dir']}"
+    code <<-GCC
+    set -e
+    aws s3 cp #{armpl_url} #{armpl_installer} --region #{node['cluster']['region']}
+    chmod 644 #{armpl_installer}
+    GCC
+    retries 5
+    retry_delay 10
   end
 
   bash "install arm performance library" do
@@ -111,17 +116,20 @@ action :setup do
   end
 
   gcc_version = "#{gcc_major_minor_version}.#{new_resource.gcc_patch_version}"
-  gcc_url = "https://ftp.gnu.org/gnu/gcc/gcc-#{gcc_version}/gcc-#{gcc_version}.tar.gz"
   gcc_tarball = "#{new_resource.sources_dir}/gcc-#{gcc_version}.tar.gz"
 
   # Get gcc tarball
-  remote_file gcc_tarball do
-    source gcc_url
-    mode '0644'
+  bash 'get gcc from s3' do
+    user 'root'
+    group 'root'
+    cwd "#{node['cluster']['sources_dir']}"
+    code <<-GCC
+    set -e
+    aws s3 cp #{node['cluster']['artifacts_build_url']}/gcc/gcc-#{gcc_version}.tar.gz #{gcc_tarball} --region #{node['cluster']['region']}
+    chmod 644 #{gcc_tarball}
+    GCC
     retries 5
     retry_delay 10
-    ssl_verify_mode :verify_none
-    action :create_if_missing
   end
 
   # Install gcc
