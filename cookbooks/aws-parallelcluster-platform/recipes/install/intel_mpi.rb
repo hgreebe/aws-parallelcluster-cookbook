@@ -43,11 +43,11 @@ bash 'get intelmpi from s3' do
   user 'root'
   group 'root'
   cwd "#{node['cluster']['sources_dir']}"
-  code <<-GCC
+  code <<-IMPI
     set -e
     aws s3 cp #{intelmpi_installer_url} #{intelmpi_installer_path} --region #{node['cluster']['region']}
     chmod 744 #{intelmpi_installer_path}
-    GCC
+    IMPI
   retries 5
   retry_delay 10
 end
