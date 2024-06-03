@@ -31,7 +31,7 @@ action :install_kernel_source do
     version kernel_source_package_version
     case node[:platform]
     when 'amazon'
-      options('--disablerepo="*" --enablerepo="amzn2extra-kernel-5.10"')
+      options('--disablerepo="epel"')
     end
     retries 3
     retry_delay 5
