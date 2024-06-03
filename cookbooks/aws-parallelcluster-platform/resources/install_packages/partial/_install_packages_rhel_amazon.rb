@@ -15,6 +15,10 @@
 
 action :install do
   package new_resource.packages do
+    case node[:platform]
+    when 'amazon'
+      options('--disablerepo="epel"')
+    end
     retries 10
     retry_delay 5
     flush_cache({ before: true })
