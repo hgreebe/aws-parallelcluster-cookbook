@@ -22,7 +22,7 @@ file_cache_path = Chef::Config[:file_cache_path]
 
 remote_file 'download awscli bundle from s3' do
   path "#{file_cache_path}/awscli-bundle.zip"
-  source 'https://s3.amazonaws.com/aws-cli/awscli-bundle.zip'
+  source "https://s3.#{aws_region}.#{aws_domain}/aws-cli/awscli-bundle.zip"
   path
   retries 5
   retry_delay 5
