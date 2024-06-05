@@ -46,6 +46,10 @@ action :setup do
     action :update
   end
   package prerequisites do
+    case node[:platform]
+    when 'amazon'
+      options('--disablerepo="epel"')
+    end
     retries 3
     retry_delay 5
   end

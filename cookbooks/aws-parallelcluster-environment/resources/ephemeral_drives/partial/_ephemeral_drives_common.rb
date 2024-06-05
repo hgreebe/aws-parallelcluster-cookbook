@@ -22,6 +22,10 @@ default_action :setup
 action :setup do
   package "install Logical Volume Manager 2 utilities" do
     package_name "lvm2"
+    case node[:platform]
+    when 'amazon'
+      options('--disablerepo="epel"')
+    end
     retries 3
     retry_delay 5
   end

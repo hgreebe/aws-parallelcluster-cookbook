@@ -47,7 +47,7 @@ action :setup do
 
   modules 'Prerequisite: Environment modules'
   build_tools 'Prerequisite: build tools'
-  package %w(wget bzip2)
+  # package %w(wget bzip2)
 
   action_arm_pl_prerequisite
 
