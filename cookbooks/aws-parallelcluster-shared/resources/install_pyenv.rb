@@ -43,6 +43,7 @@ action :run do
       cwd "#{prefix}"
       code <<-VENV
       set -e
+      tar -xzf Python-#{python_version}.tgz 
       cd Python-#{python_version}
       ./configure --prefix=#{prefix}/versions/#{python_version}
       make
