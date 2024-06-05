@@ -28,22 +28,18 @@ cuda_samples_version = '12.2'
 tmp_cuda_run = '/tmp/cuda.run'
 tmp_cuda_sample_archive = '/tmp/cuda-sample.tar.gz'
 
+cuda_url = "#{node['cluster']['artifacts_s3_url']}/dependencies/cuda/cuda_#{cuda_complete_version}_#{cuda_version_suffix}_#{cuda_arch}.run"
+
 node.default['cluster']['nvidia']['cuda']['version'] = cuda_version
 node.default['cluster']['nvidia']['cuda_samples_version'] = cuda_samples_version
 node_attributes 'Save cuda and cuda samples versions for InSpec tests'
 
-bash 'Get CUDA run file from s3' do
-  user 'root'
-  group 'root'
-  cwd "#{node['cluster']['sources_dir']}"
-  code <<-CUDA
-    set -e
-    aws s3 cp #{node['cluster']['artifacts_build_url']}/cuda/cuda_#{cuda_complete_version}_#{cuda_version_suffix}_#{cuda_arch}.run #{tmp_cuda_run} --region #{node['cluster']['region']}
-    chmod 755 #{tmp_cuda_run}
-    CUDA
-  not_if { ::File.exist?("/usr/local/cuda-#{cuda_version}") }
+remote_file tmp_cuda_run do
+  source cuda_url
+  mode '0755'
   retries 3
   retry_delay 5
+  not_if { ::File.exist?("/usr/local/cuda-#{cuda_version}") }
 end
 
 # Install CUDA driver
