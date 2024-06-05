@@ -39,17 +39,12 @@ directory node['cluster']['sources_dir'] do
 end
 
 # fetch intelmpi installer script
-bash 'get intelmpi from s3' do
-  user 'root'
-  group 'root'
-  cwd "#{node['cluster']['sources_dir']}"
-  code <<-IMPI
-    set -e
-    aws s3 cp #{intelmpi_installer_url} #{intelmpi_installer_path} --region #{node['cluster']['region']}
-    chmod 744 #{intelmpi_installer_path}
-    IMPI
-  retries 5
-  retry_delay 10
+remote_file intelmpi_installer_path do
+  source intelmpi_installer_url
+  mode '0744'
+  retries 3
+  retry_delay 5
+  not_if { ::File.exist?(intelmpi_installation_path.to_s) }
 end
 
 bash "install intel mpi" do
