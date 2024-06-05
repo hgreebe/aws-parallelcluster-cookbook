@@ -20,18 +20,11 @@ return if ::File.exist?("/usr/local/bin/aws") || redhat_on_docker?
 
 file_cache_path = Chef::Config[:file_cache_path]
 region = aws_region
+prefix = "awscli-bundle"
 awscli_url = "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip"
 if region.start_with?("us-iso")
   awscli_url ="https://aws-sdk-common-infra-dca-prod-deployment-bucket.s3.#{aws_region}.#{aws_domain}/aws-cli-v2/linux/x86_64/awscli-exe-linux-x86_64.zip"
-end
-
-bash "mkdir for awscli" do
-  user 'root'
-  group 'root'
-  code <<-CLI
-    set -e
-    mkdir -p #{file_cache_path}
-  CLI
+  prefix = "aws"
 end
 
 remote_file 'download awscli bundle from s3' do
@@ -49,5 +42,5 @@ archive_file 'extract awscli bundle' do
 end
 
 bash 'install awscli' do
-  code "#{cookbook_virtualenv_path}/bin/python#{node['cluster']['python-major-minor-version']} #{file_cache_path}/awscli/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws"
+  code "#{cookbook_virtualenv_path}/bin/python#{node['cluster']['python-major-minor-version']} #{file_cache_path}/awscli/#{prefix}/install -i /usr/local/aws -b /usr/local/bin/aws"
 end
