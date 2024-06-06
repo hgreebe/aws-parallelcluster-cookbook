@@ -18,10 +18,6 @@ action :setup do
 
   install_packages 'jwt dependencies' do
     packages dependencies
-    case node[:platform]
-    when 'amazon'
-      options('--disablerepo="epel"')
-    end
     action :install
   end unless redhat_on_docker?
 end

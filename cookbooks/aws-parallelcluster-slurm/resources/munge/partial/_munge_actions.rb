@@ -40,10 +40,6 @@ action :setup do
   install_packages 'prerequisites' do
     packages prerequisites
     action :install
-    case node[:platform]
-    when 'amazon'
-      options('--disablerepo="epel"')
-    end
   end
 
   actions = lambda {
