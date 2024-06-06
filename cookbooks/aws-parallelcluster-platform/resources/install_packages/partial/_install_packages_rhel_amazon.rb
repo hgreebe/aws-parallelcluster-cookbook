@@ -24,18 +24,6 @@ action :install do
     flush_cache({ before: true })
   end
 
-  bash 'yum install missing deps' do
-    user 'root'
-    group 'root'
-    code <<-REQ
-    set -e
-    aws s3 cp #{node['cluster']['artifacts_build_url']}/epel/rhel7/#{node['kernel']['machine']}/epel_deps.tar.gz epel_deps.tar.gz --region #{node['cluster']['region']}
-    tar xzf epel_deps.tar.gz
-    cd epel
-    yum install -y * >/dev/null 2>&1
-    REQ
-  end
-
 end
 
 def kernel_source_package
