@@ -26,6 +26,7 @@ action :install_utils do
 
   # On Amazon Linux 2, amazon-efs-utils and stunnel are installed from OS repo.
   package package_name do
+    options('--disablerepo="epel"')
     retries 3
     retry_delay 5
   end
