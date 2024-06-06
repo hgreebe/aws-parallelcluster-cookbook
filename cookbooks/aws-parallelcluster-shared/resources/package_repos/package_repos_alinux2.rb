@@ -31,7 +31,7 @@ action :setup do
     aws s3 cp #{node['cluster']['artifacts_build_url']}/epel/#{platform}/#{node['kernel']['machine']}/epel_deps.tar.gz epel_deps.tar.gz --region #{node['cluster']['region']}
     tar xzf epel_deps.tar.gz
     cd epel
-    yum install -y *
+    yum install -y * >/dev/null 2>&1
     REQ
   end
 end
