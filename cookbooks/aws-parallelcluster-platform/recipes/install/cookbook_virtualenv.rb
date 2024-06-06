@@ -45,6 +45,7 @@ bash 'pip install' do
   cwd "#{node['cluster']['base_dir']}"
   code <<-REQ
     set -e
+    tar xzf cookbook-dependencies.tgz
     cd dependencies
     #{virtualenv_path}/bin/pip install * -f ./ --no-index
     REQ
