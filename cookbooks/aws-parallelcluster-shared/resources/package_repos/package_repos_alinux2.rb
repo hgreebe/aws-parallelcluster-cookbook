@@ -22,8 +22,24 @@ default_action :setup
 action :setup do
   include_recipe 'yum'
   alinux_extras_topic 'epel'
+
+  bash 'yum install missing deps' do
+    user 'root'
+    group 'root'
+    code <<-REQ
+    set -e
+    aws s3 cp #{node['cluster']['artifacts_build_url']}/epel/#{platform}/#{node['kernel']['machine']}/epel_deps.tar.gz epel_deps.tar.gz --region #{node['cluster']['region']}
+    tar xzf epel_deps.tar.gz
+    cd epel
+    yum install -y *
+    REQ
+  end
 end
 
 action :update do
   # Do nothing
+end
+
+def platform
+  "rhel7"
 end
