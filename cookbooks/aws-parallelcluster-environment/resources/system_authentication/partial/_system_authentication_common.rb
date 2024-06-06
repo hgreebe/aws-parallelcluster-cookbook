@@ -21,6 +21,10 @@ action :setup do
   end
 
   package required_packages do
+    case node[:platform]
+    when 'amazon'
+      options('--disablerepo="epel"')
+    end
     retries 3
     retry_delay 5
   end unless redhat_on_docker?
