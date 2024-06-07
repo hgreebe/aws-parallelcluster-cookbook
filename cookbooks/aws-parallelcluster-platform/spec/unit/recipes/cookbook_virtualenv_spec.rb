@@ -33,6 +33,22 @@ describe 'aws-parallelcluster-platform::cookbook_virtualenv' do
           expect(node.default['cluster']['cookbook_virtualenv_path']).to eq(virtualenv_path)
           is_expected.to write_node_attributes('dump node attributes')
         end
+
+        it 'copies requirements file' do
+          is_expected.to create_cookbook_file("#{pyenv_path}/requirements.txt").with(
+            source: requirements_path,
+            mode: '0755'
+          )
+        end
+
+        it 'installs python packages' do
+          is_expected.to run_bash("pip install").with(
+            user: 'root',
+            group: 'root',
+            cwd: "#{node['cluster']['base_dir']}",
+            )
+            .with_code(%r{tar xzf cookbook-dependencies.tgz})
+        end
       end
 
       context "when cookbook virtualenv already installed" do
