@@ -55,8 +55,8 @@ action :setup do
   armpl_tarball_name = "arm-performance-libraries_#{armpl_version}_#{armpl_platform}_gcc-#{gcc_major_minor_version}.tar"
 
   armpl_url = %W(
-    https://#{new_resource.region}-aws-parallelcluster.s3.#{new_resource.region}.#{new_resource.aws_domain}
-    archives/armpl/#{armpl_platform}
+    #{node['cluster']['artifacts_s3_url']}
+    armpl/#{armpl_platform}
     #{armpl_tarball_name}
   ).join('/')
 
@@ -115,7 +115,7 @@ action :setup do
   gcc_tarball = "#{new_resource.sources_dir}/gcc-#{gcc_version}.tar.gz"
 
   # Get gcc tarball
-  emote_file gcc_tarball do
+  remote_file gcc_tarball do
     source gcc_url
     mode '0644'
     retries 5
