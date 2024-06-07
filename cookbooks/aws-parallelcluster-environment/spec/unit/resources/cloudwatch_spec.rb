@@ -64,7 +64,7 @@ describe 'cloudwatch:setup' do
 
         it 'downloads cloudwatch public key' do
           is_expected.to create_if_missing_remote_file(public_key_local_path).with(
-            source: 'https://s3.amazonaws.com/amazoncloudwatch-agent/assets/amazon-cloudwatch-agent.gpg',
+            source: "https://s3.test_region.test_aws_domain/amazoncloudwatch-agent/assets/amazon-cloudwatch-agent.gpg",
             retries: 3,
             retry_delay: 5
           )

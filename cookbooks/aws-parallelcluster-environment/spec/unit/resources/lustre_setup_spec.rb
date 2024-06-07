@@ -146,8 +146,8 @@ describe 'lustre:setup' do
 
     it 'installs lustre packages from repository and installs kernel module lnet' do
       is_expected.to create_yum_repository("aws-fsx")
-        .with(baseurl: 'https://fsx-lustre-client-repo.s3.amazonaws.com/el/7.minor/x86_64/')
-        .with(gpgkey: 'https://fsx-lustre-client-repo-public-keys.s3.amazonaws.com/fsx-rpm-public-key.asc')
+        .with(baseurl: "https://fsx-lustre-client-repo.s3.#{aws_region}.#{aws_domain}/el/7.minor/x86_64/")
+        .with(gpgkey: "https://fsx-lustre-client-repo-public-keys.s3.#{aws_region}.#{aws_domain}/fsx-rpm-public-key.asc")
         .with(retries: 3)
         .with(retry_delay: 5)
 
@@ -220,8 +220,8 @@ describe 'lustre:setup' do
 
         it 'installs lustre packages from repository and installs kernel module lnet' do
           is_expected.to create_yum_repository("aws-fsx")
-            .with(baseurl: "https://fsx-lustre-client-repo.s3.amazonaws.com/el/8.#{minor_version}/$basearch")
-            .with(gpgkey: 'https://fsx-lustre-client-repo-public-keys.s3.amazonaws.com/fsx-rpm-public-key.asc')
+            .with(baseurl: "https://fsx-lustre-client-repo.s3.#{aws_region}.#{aws_domain}/el/8.#{minor_version}/$basearch")
+            .with(gpgkey: "https://fsx-lustre-client-repo-public-keys.s3.#{aws_region}.#{aws_domain}/fsx-rpm-public-key.asc")
             .with(retries: 3)
             .with(retry_delay: 5)
 
@@ -254,9 +254,9 @@ describe 'lustre:setup' do
 
       it 'installs lustre packages from repository and installs kernel module lnet' do
         is_expected.to add_apt_repository('fsxlustreclientrepo')
-          .with(uri: 'https://fsx-lustre-client-repo.s3.amazonaws.com/ubuntu')
+          .with(uri: "https://fsx-lustre-client-repo.s3.#{aws_region}.#{aws_domain}/ubuntu")
           .with(components: %w(main))
-          .with(key: ["https://fsx-lustre-client-repo-public-keys.s3.amazonaws.com/fsx-ubuntu-public-key.asc"])
+          .with(key: ["https://fsx-lustre-client-repo-public-keys.s3.#{aws_region}.#{aws_domain}/fsx-ubuntu-public-key.asc"])
           .with(retries: 3)
           .with(retry_delay: 5)
 
@@ -345,7 +345,7 @@ describe 'lustre:find_centos_minor_version' do
 
       it 'uses empty minor version' do
         is_expected.to create_yum_repository("aws-fsx")
-          .with(baseurl: 'https://fsx-lustre-client-repo.s3.amazonaws.com/el/7./x86_64/')
+          .with(baseurl: "https://fsx-lustre-client-repo.s3.#{aws_region}.#{aws_domain}/el/7./x86_64/")
       end
     end
 
@@ -363,7 +363,7 @@ describe 'lustre:find_centos_minor_version' do
 
       it 'uses minor version 7' do
         is_expected.to create_yum_repository("aws-fsx")
-          .with(baseurl: 'https://fsx-lustre-client-repo.s3.amazonaws.com/el/7.7/x86_64/')
+          .with(baseurl: "https://fsx-lustre-client-repo.s3.#{aws_region}.#{aws_domain}/el/7.7/x86_64/")
       end
     end
 
@@ -381,7 +381,7 @@ describe 'lustre:find_centos_minor_version' do
 
       it 'uses minor version 7' do
         is_expected.to create_yum_repository("aws-fsx")
-          .with(baseurl: 'https://fsx-lustre-client-repo.s3.amazonaws.com/el/7.8/x86_64/')
+          .with(baseurl: "https://fsx-lustre-client-repo.s3.#{aws_region}.#{aws_domain}/el/7.8/x86_64/")
       end
     end
 
@@ -399,7 +399,7 @@ describe 'lustre:find_centos_minor_version' do
 
       it 'uses minor version 7' do
         is_expected.to create_yum_repository("aws-fsx")
-          .with(baseurl: 'https://fsx-lustre-client-repo.s3.amazonaws.com/el/7.9/x86_64/')
+          .with(baseurl: "https://fsx-lustre-client-repo.s3.#{aws_region}.#{aws_domain}/el/7.9/x86_64/")
       end
     end
   end
