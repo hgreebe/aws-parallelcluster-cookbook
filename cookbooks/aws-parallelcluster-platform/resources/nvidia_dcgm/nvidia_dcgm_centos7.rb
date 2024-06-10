@@ -16,7 +16,7 @@ provides :nvidia_dcgm, platform: 'centos' do |node|
   node['platform_version'].to_i == 7
 end
 
-use 'partial/_nvidia_dcgm_alinux2_centos7.rb'
+use 'partial/_nvidia_dcgm_common.rb'
 use 'partial/_nvidia_dcgm_rhel.rb'
 
 def _nvidia_dcgm_enabled

@@ -19,14 +19,11 @@ action :install_package do
     code <<-DCGM_INSTALL
     set -e
     aws s3 cp #{dcgm_url} #{dcgm_package}-#{package_version}.deb --region #{node['cluster']['region']}
+    apt -y install #{dcgm_package}-#{package_version}.deb
     DCGM_INSTALL
     retries 3
     retry_delay 5
   end
-
-  command "apt -y install #{dcgm_package}-#{package_version}.deb "
-  retries 3
-  retry_delay 5
 
 end
 
