@@ -118,7 +118,7 @@ describe 'install_pyenv:run' do
 
           it 'downloads python tarball' do
             is_expected.to create_if_missing_remote_file("#{pyenv_root}/Python-#{python_version}.tgz").with(
-              source: "https://bucket.s3.#{aws_domain}/archives/dependencies/python/Python-#{python_version}.tgz",
+              source: "https://www.python.org/ftp/python/#{python_version}/Python-#{python_version}.tgz",
               mode: '0644',
               retries: 3,
               retry_delay: 5

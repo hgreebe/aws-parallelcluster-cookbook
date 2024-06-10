@@ -46,7 +46,7 @@ describe 'aws-parallelcluster-environment::cfn_bootstrap' do
 
         it 'downloads cfn_bootstrap package from s3' do
           is_expected.to create_remote_file("/tmp/#{cfnbootstrap_package}").with(
-            source: "https://s3.#{aws_region}.#{aws_domain}/cloudformation-examples/#{cfnbootstrap_package}"
+            source: "https://s3.#{aws_domain}/cloudformation-examples/#{cfnbootstrap_package}"
           )
         end
 

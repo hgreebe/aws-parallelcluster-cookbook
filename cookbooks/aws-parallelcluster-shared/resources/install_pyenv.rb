@@ -4,7 +4,7 @@ provides :install_pyenv
 unified_mode true
 
 # Resource:: to create a Python virtual environment for a given user
-property :user_only, [true, false], default: falsei
+property :user_only, [true, false], default: false
 property :user, String
 property :python_version, String
 property :prefix, String
@@ -20,12 +20,16 @@ action :run do
 
   if new_resource.user_only
     raise "user property is required for resource install_pyenv when user_only is set to true" unless new_resource.user
-
+    prefix = new_resource.prefix
   else
     prefix = new_resource.prefix || node['cluster']['system_pyenv_root']
-    directory prefix do
-      recursive true
-    end
+    # directory prefix do
+    #   recursive true
+    # end
+  end
+
+  directory prefix do
+    recursive true
   end
 
   remote_file "#{prefix}/Python-#{python_version}.tgz" do
