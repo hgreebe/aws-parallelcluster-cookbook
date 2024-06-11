@@ -36,7 +36,7 @@ describe 'aws-parallelcluster-environment::cfn_bootstrap' do
             group: 'root',
             cwd: "#{node['cluster']['base_dir']}",
           )
-          .with_code(%r{tar xzf cfn-dependencies.tgz})
+          .with_code(%r{#{virtualenv_path}/bin/pip install * -f ./ --no-index})
         end
 
         it 'sets virtualenv path' do
