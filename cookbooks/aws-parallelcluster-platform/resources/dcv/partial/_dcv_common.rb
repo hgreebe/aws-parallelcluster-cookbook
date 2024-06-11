@@ -148,7 +148,8 @@ action :setup do
     # Extract DCV packages
     unless ::File.exist?(dcv_tarball)
       remote_file "#{dcv_tarball}" do
-        source "#{dcv_url}"
+        source dcv_url
+        checksum dcv_sha256sum
         mode '0644'
         retries 3
         retry_delay 5

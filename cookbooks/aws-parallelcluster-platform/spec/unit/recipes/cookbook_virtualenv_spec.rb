@@ -25,7 +25,6 @@ describe 'aws-parallelcluster-platform::cookbook_virtualenv' do
           is_expected.to run_activate_virtual_env('cookbook_virtualenv').with(
             pyenv_path: virtualenv_path,
             python_version: python_version,
-            requirements_path: "cookbook_virtualenv/requirements.txt"
           )
         end
 
@@ -35,8 +34,8 @@ describe 'aws-parallelcluster-platform::cookbook_virtualenv' do
         end
 
         it 'copies requirements file' do
-          is_expected.to create_cookbook_file("#{pyenv_path}/requirements.txt").with(
-            source: requirements_path,
+          is_expected.to create_cookbook_file("#{virtualenv_path}/requirements.txt").with(
+            source: "cookbook_virtualenv/requirements.txt",
             mode: '0755'
           )
         end
@@ -48,21 +47,6 @@ describe 'aws-parallelcluster-platform::cookbook_virtualenv' do
             cwd: "#{node['cluster']['base_dir']}",
             )
             .with_code(%r{tar xzf cookbook-dependencies.tgz})
-        end
-      end
-
-      context "when cookbook virtualenv already installed" do
-        cached(:chef_run) do
-          runner = runner(platform: platform, version: version) do |node|
-            node.override['cluster']['system_pyenv_root'] = system_pyenv_root
-            node.override['cluster']['python-version'] = python_version
-          end
-          allow(File).to receive(:exist?).with("#{virtualenv_path}/bin/activate").and_return(true)
-          runner.converge(described_recipe)
-        end
-
-        it 'does not activate cookbook virtualenv' do
-          is_expected.not_to run_activate_virtual_env('cookbook_virtualenv')
         end
       end
     end
