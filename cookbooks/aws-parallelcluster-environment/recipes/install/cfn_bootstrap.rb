@@ -47,6 +47,7 @@ bash 'pip install' do
   cwd "#{node['cluster']['base_dir']}"
   code <<-REQ
     set -e
+    tar xzf cfn-dependencies.tgz
     cd cfn
     #{virtualenv_path}/bin/pip install * -f ./ --no-index
     REQ
