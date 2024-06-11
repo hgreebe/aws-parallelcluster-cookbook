@@ -42,34 +42,34 @@ action :setup do
   end
 
   # update repos and install prerequisite packages
-  package_repos 'update package repos' do
-    action :update
-  end
-  package prerequisites do
-    case node[:platform]
-    when 'amazon'
-      options('--disablerepo="epel"')
-    end
-    retries 3
-    retry_delay 5
-  end
+  # package_repos 'update package repos' do
+  #   action :update
+  # end
+  # package prerequisites do
+  #   case node[:platform]
+  #   when 'amazon'
+  #     options('--disablerepo="epel"')
+  #   end
+  #   retries 3
+  #   retry_delay 5
+  # end
 
   action_download_and_install
 end
 
 action :download_and_install do
   # Get EFA Installer
-  region = aws_region
-  efa_installer_url = "https://efa-installer.amazonaws.com/aws-efa-installer-#{new_resource.efa_version}.tar.gz"
-  if region.start_with?("us-iso")
-    efa_installer_url = "https://aws-efa-installer.s3.#{aws_region}.#{aws_domain}/aws-efa-installer-#{new_resource.efa_version}.tar.gz"
-  end
+  # region = aws_region
+  # efa_installer_url = "https://efa-installer.amazonaws.com/aws-efa-installer-#{new_resource.efa_version}.tar.gz"
+  # if region.start_with?("us-iso")
+  #   efa_installer_url = "https://aws-efa-installer.s3.#{aws_region}.#{aws_domain}/aws-efa-installer-#{new_resource.efa_version}.tar.gz"
+  # end
   remote_file efa_tarball do
-    source efa_installer_url
+    source "https://aws-efa-installer.s3.us-isob-east-1.sc2s.sgov.gov/aws-efa-installer-1.30.0.tar.gz"
     mode '0644'
     retries 3
     retry_delay 5
-    checksum new_resource.efa_checksum
+    # checksum new_resource.efa_checksum
     action :create_if_missing
   end
 
