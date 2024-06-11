@@ -45,14 +45,14 @@ action :setup do
   package_repos 'update package repos' do
     action :update
   end
-  # package prerequisites do
-  #   case node[:platform]
-  #   when 'amazon'
-  #     options('--disablerepo="epel"')
-  #   end
-  #   retries 3
-  #   retry_delay 5
-  # end
+  package prerequisites do
+    case node[:platform]
+    when 'amazon'
+      options('--disablerepo="epel"')
+    end
+    retries 3
+    retry_delay 5
+  end
 
   action_download_and_install
 end
@@ -62,7 +62,7 @@ action :download_and_install do
   region = aws_region
   efa_installer_url = "https://efa-installer.amazonaws.com/aws-efa-installer-#{new_resource.efa_version}.tar.gz"
   if region.start_with?("us-iso")
-    efa_installer_url = "https://efa-installer.#{aws_region}.#{aws_domain}/aws-efa-installer-#{new_resource.efa_version}.tar.gz"
+    efa_installer_url = "https://aws-efa-installer.s3.#{aws_region}.#{aws_domain}/aws-efa-installer-#{new_resource.efa_version}.tar.gz"
   end
   remote_file efa_tarball do
     source efa_installer_url
