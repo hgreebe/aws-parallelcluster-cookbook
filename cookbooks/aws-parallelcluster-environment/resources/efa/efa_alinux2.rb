@@ -16,6 +16,8 @@ provides :efa, platform: 'amazon', platform_version: '2'
 unified_mode true
 default_action :setup
 
+Chef::Log.info('EFA in alinux2')
+
 use 'partial/_common'
 
 action_class do

@@ -17,7 +17,9 @@ nfs 'install NFS daemon'
 ephemeral_drives 'install'
 ec2_udev_rules 'configure udev'
 cloudwatch 'Install amazon-cloudwatch-agent'
+Chef::Log.info('Before EFA')
 efa 'Install EFA'
+Chef::Log.info('After EFA')
 raid 'Install RAID prerequisite packages'
 lustre 'Install FSx options'
 efs 'Install efs-utils'
