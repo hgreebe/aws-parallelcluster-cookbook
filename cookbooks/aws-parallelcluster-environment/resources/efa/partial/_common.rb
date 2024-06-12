@@ -21,6 +21,7 @@ property :efa_version, String, default: node['cluster']['efa']['version']
 property :efa_checksum, String, default: node['cluster']['efa']['sha256']
 
 action :setup do
+  Chef::Log.info('EFA before check installed')
   if efa_installed? && !::File.exist?(efa_tarball)
     log 'efa installed' do
       message 'Existing EFA version differs from the one shipped with ParallelCluster. Skipping ParallelCluster EFA installation and configuration.'
@@ -53,6 +54,7 @@ action :setup do
   #   retries 3
   #   retry_delay 5
   # end
+  Chef::Log.info('EFA before action_and_install')
 
   action_download_and_install
 end
@@ -64,6 +66,7 @@ action :download_and_install do
   # if region.start_with?("us-iso")
   #   efa_installer_url = "https://aws-efa-installer.s3.#{aws_region}.#{aws_domain}/aws-efa-installer-#{new_resource.efa_version}.tar.gz"
   # end
+  Chef::Log.info('EFA start of download_and_install')
   remote_file efa_tarball do
     source "https://aws-efa-installer.s3.us-isob-east-1.sc2s.sgov.gov/aws-efa-installer-1.30.0.tar.gz"
     mode '0644'
@@ -76,6 +79,7 @@ action :download_and_install do
   installer_options = "-y"
   # skip efa-kmod installation on not supported platforms
   installer_options += " -k" unless efa_supported?
+  Chef::Log.info('EFA before install')
 
   bash "install efa" do
     cwd node['cluster']['sources_dir']
@@ -88,6 +92,7 @@ action :download_and_install do
     EFAINSTALL
     not_if { efa_installed? || on_docker? }
   end
+  Chef::Log.info('EFA after install')
 end
 
 action :configure do
