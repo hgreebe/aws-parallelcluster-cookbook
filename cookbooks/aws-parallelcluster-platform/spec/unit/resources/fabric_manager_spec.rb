@@ -208,7 +208,7 @@ describe 'fabric_manager:setup' do
               .with(user: 'root')
               .with_retries(3)
               .with_retry_delay(5)
-              .with_code(%r{yum install -y #{fabric_manager_package}-#{fabric_manager_version}.rpm)})
+              .with_code(%r{yum install -y #{fabric_manager_package}-#{fabric_manager_version}.rpm})
           end
         end
       end
