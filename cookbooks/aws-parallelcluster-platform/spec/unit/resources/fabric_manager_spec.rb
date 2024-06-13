@@ -164,6 +164,7 @@ end
 
 describe 'fabric_manager:setup' do
   cached(:nvidia_driver_version) { 'nvidia_driver_version' }
+  cached(:aws_region) { 'test_region' }
 
   for_all_oses do |platform, version|
     context "on #{platform}#{version}" do
