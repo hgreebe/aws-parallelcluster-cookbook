@@ -223,12 +223,10 @@ describe 'dcv:dcv_url' do
       cached(:dcv_major_minor) { 'major.minor' }
       cached(:dcv_version) { "#{dcv_major_minor}-patch" }
       cached(:dcv_package) { "dcv_package" }
-      cached(:test_bucket) { "https://test-bucket.s3.#{node['cluster']['aws_domain']}/archives" }
       cached(:chef_run) do
         allow_any_instance_of(Object).to receive(:arm_instance?).and_return(false)
         runner(platform: platform, version: version, step_into: ['dcv']) do |node|
           node.override['cluster']['dcv']['version'] = dcv_version
-          node.override['cluster']['artifacts_s3_url'] = test_bucket
         end
       end
       cached(:node) { chef_run.node }
@@ -241,7 +239,7 @@ describe 'dcv:dcv_url' do
       end
 
       it 'returns dcv_url' do
-        expect(resource.dcv_url).to eq("#{test_bucket}/dependencies/dcv#{dcv_package}.tgz")
+        expect(resource.dcv_url).to eq("#{node['cluster']['artifacts_s3_url']}/dependencies/dcv#{dcv_package}.tgz")
       end
     end
   end
