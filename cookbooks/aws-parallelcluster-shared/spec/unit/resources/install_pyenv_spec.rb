@@ -52,7 +52,7 @@ describe 'install_pyenv:run' do
             group: 'root',
             cwd: "#{node['cluster']['system_pyenv_root']}"
           ).with_code(/tar -xzf Python-#{python_version}.tgz/)
-           .with_code(%r{./configure --prefix=#{node['cluster']['system_pyenv_root']}/versions/#{python_version}})
+                                                                     .with_code(%r{./configure --prefix=#{node['cluster']['system_pyenv_root']}/versions/#{python_version}})
         end
       end
 
