@@ -20,67 +20,67 @@ action :run do
 
   if new_resource.user_only
     raise "user property is required for resource install_pyenv when user_only is set to true" unless new_resource.user
-    # prefix = new_resource.prefix
-    pyenv_install 'user' do
-      user new_resource.user
-      prefix new_resource.prefix if new_resource.prefix
-    end
+    prefix = new_resource.prefix || "#{::File.expand_path("~#{user}")}/.pyenv"
+    # pyenv_install 'user' do
+    #   user new_resource.user
+    #   prefix new_resource.prefix if new_resource.prefix
+    # end
   else
     prefix = new_resource.prefix || node['cluster']['system_pyenv_root']
 
-    directory prefix do
-      recursive true
-    end
-
-    remote_file "#{prefix}/Python-#{python_version}.tgz" do
-      source "#{python_url}"
-      mode '0644'
-      retries 3
-      retry_delay 5
-      action :create_if_missing
-    end
-
-    bash "install python #{python_version}" do
-      user user
-      group 'root'
-      cwd "#{prefix}"
-      code <<-VENV
-      set -e
-      tar -xzf Python-#{python_version}.tgz
-      cd Python-#{python_version}
-      ./configure --prefix=#{prefix}/versions/#{python_version}
-      make
-      make install
-      VENV
-    end
+    # directory prefix do
+    #   recursive true
+    # end
+    #
+    # remote_file "#{prefix}/Python-#{python_version}.tgz" do
+    #   source "#{python_url}"
+    #   mode '0644'
+    #   retries 3
+    #   retry_delay 5
+    #   action :create_if_missing
+    # end
+    #
+    # bash "install python #{python_version}" do
+    #   user user
+    #   group 'root'
+    #   cwd "#{prefix}"
+    #   code <<-VENV
+    #   set -e
+    #   tar -xzf Python-#{python_version}.tgz
+    #   cd Python-#{python_version}
+    #   ./configure --prefix=#{prefix}/versions/#{python_version}
+    #   make
+    #   make install
+    #   VENV
+    # end
   end
 
-  # directory prefix do
-  #   recursive true
-  # end
-  #
-  # remote_file "#{prefix}/Python-#{python_version}.tgz" do
-  #   source "#{python_url}"
-  #   mode '0644'
-  #   retries 3
-  #   retry_delay 5
-  #   action :create_if_missing
-  # end
+  directory prefix do
+    recursive true
+  end
 
-  # user = new_resource.user || 'root'
+  remote_file "#{prefix}/Python-#{python_version}.tgz" do
+    source "#{python_url}"
+    mode '0644'
+    retries 3
+    retry_delay 5
+    action :create_if_missing
+  end
 
-  # bash "install python #{python_version}" do
-  #   user user
-  #   group 'root'
-  #   cwd "#{prefix}"
-  #   code <<-VENV
-  #   set -e
-  #   tar -xzf Python-#{python_version}.tgz
-  #   cd Python-#{python_version}
-  #   ./configure --prefix=#{prefix}/versions/#{python_version}
-  #   make
-  #   make install
-  #   VENV
-  # end
+  user = new_resource.user || 'root'
+
+  bash "install python #{python_version}" do
+    user user
+    group 'root'
+    cwd "#{prefix}"
+    code <<-VENV
+    set -e
+    tar -xzf Python-#{python_version}.tgz
+    cd Python-#{python_version}
+    ./configure --prefix=#{prefix}/versions/#{python_version}
+    make
+    make install
+    VENV
+  end
 
 end
