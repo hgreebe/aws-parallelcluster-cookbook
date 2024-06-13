@@ -34,7 +34,7 @@ describe 'aws-parallelcluster-environment::cfn_bootstrap' do
           is_expected.to run_bash("pip install").with(
             user: 'root',
             group: 'root',
-            cwd: "#{node['cluster']['base_dir']}",
+            cwd: "#{node['cluster']['base_dir']}"
           )
         end
 

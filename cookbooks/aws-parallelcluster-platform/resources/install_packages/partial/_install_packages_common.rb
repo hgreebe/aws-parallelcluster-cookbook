@@ -29,10 +29,7 @@ action :install_kernel_source do
   package "install kernel packages" do
     package_name kernel_source_package
     version kernel_source_package_version
-    case node[:platform]
-    when 'amazon'
-      options('--disablerepo="epel"')
-    end
+    options('--disablerepo="epel"') if platform?('amazon')
     retries 3
     retry_delay 5
   end unless on_docker?

@@ -90,21 +90,21 @@ describe 'efa:setup' do
           end
         end
 
-      #   context 'and installer tarball exists' do
-      #     before do
-      #       mock_file_exists("#{source_dir}/aws-efa-installer.tar.gz", true)
-      #       ConvergeEfa.setup(chef_run)
-      #     end
-      #
-      #     it 'installs EFA' do
-      #       is_expected.not_to write_log('efa installed')
-      #       is_expected.not_to remove_package(%w(openmpi-devel openmpi))
-      #       is_expected.to update_package_repos('update package repos')
-      #       is_expected.to install_package(prerequisites)
-      #       is_expected.to create_if_missing_remote_file("#{source_dir}/aws-efa-installer.tar.gz")
-      #       is_expected.not_to run_bash('install efa')
-      #     end
-      #   end
+        #   context 'and installer tarball exists' do
+        #     before do
+        #       mock_file_exists("#{source_dir}/aws-efa-installer.tar.gz", true)
+        #       ConvergeEfa.setup(chef_run)
+        #     end
+        #
+        #     it 'installs EFA' do
+        #       is_expected.not_to write_log('efa installed')
+        #       is_expected.not_to remove_package(%w(openmpi-devel openmpi))
+        #       is_expected.to update_package_repos('update package repos')
+        #       is_expected.to install_package(prerequisites)
+        #       is_expected.to create_if_missing_remote_file("#{source_dir}/aws-efa-installer.tar.gz")
+        #       is_expected.not_to run_bash('install efa')
+        #     end
+        #   end
       end
 
       context 'when efa not installed' do

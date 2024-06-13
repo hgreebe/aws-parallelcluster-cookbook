@@ -39,9 +39,9 @@ describe 'activate_virtual_env:run' do
           is_expected.to run_bash("create venv").with(
             user: 'root',
             group: 'root',
-            cwd: "#{node['cluster']['system_pyenv_root']}",
-            )
-            .with_code(%r{source pyenv_path/bin/activate})
+            cwd: "#{node['cluster']['system_pyenv_root']}"
+          )
+                                                .with_code(%r{source pyenv_path/bin/activate})
         end
       end
 

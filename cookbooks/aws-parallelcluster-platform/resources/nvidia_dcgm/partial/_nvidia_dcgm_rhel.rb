@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 action :install_package do
-
   bash "Install #{dcgm_package}" do
     user 'root'
     code <<-DCGM_INSTALL
@@ -24,7 +23,6 @@ action :install_package do
     retries 3
     retry_delay 5
   end
-
 end
 
 def dcgm_url

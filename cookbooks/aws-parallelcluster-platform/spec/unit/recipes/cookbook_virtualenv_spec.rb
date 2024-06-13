@@ -24,7 +24,7 @@ describe 'aws-parallelcluster-platform::cookbook_virtualenv' do
         it 'activates cookbook vistualenv' do
           is_expected.to run_activate_virtual_env('cookbook_virtualenv').with(
             pyenv_path: virtualenv_path,
-            python_version: python_version,
+            python_version: python_version
           )
         end
 
@@ -44,9 +44,9 @@ describe 'aws-parallelcluster-platform::cookbook_virtualenv' do
           is_expected.to run_bash("pip install").with(
             user: 'root',
             group: 'root',
-            cwd: "#{node['cluster']['base_dir']}",
-            )
-            .with_code(%r{tar xzf cookbook-dependencies.tgz})
+            cwd: "#{node['cluster']['base_dir']}"
+          )
+                                                .with_code(/tar xzf cookbook-dependencies.tgz/)
         end
       end
     end

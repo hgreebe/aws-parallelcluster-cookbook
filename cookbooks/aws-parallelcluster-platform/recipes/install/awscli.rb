@@ -23,7 +23,7 @@ region = aws_region
 prefix = "awscli-bundle"
 awscli_url = "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip"
 if region.start_with?("us-iso")
-  awscli_url ="https://aws-sdk-common-infra-dca-prod-deployment-bucket.s3.#{aws_region}.#{aws_domain}/aws-cli-v2/linux/x86_64/awscli-exe-linux-x86_64.zip"
+  awscli_url = "https://aws-sdk-common-infra-dca-prod-deployment-bucket.s3.#{aws_region}.#{aws_domain}/aws-cli-v2/linux/x86_64/awscli-exe-linux-x86_64.zip"
   prefix = "aws"
 end
 
