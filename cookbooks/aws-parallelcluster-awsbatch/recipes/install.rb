@@ -26,6 +26,14 @@ template "/etc/profile.d/pcluster_awsbatchcli.sh" do
   mode '0644'
 end
 
+remote_file "#{Chef::Config[:file_cache_path]}/awsbatch-dependencies.tgz" do
+  source "#{node['cluster']['artifacts_s3_url']}/dependencies/PyPi/#{node['kernel']['machine']}/awsbatch-dependencies.tgz"
+  mode '0644'
+  retries 3
+  retry_delay 5
+  action :create_if_missing
+end
+
 # Check whether install a custom aws-parallelcluster-awsbatch-cli package or the standard one
 # Install awsbatch cli into awsbatch virtual env
 if !node['cluster']['custom_awsbatchcli_package'].nil? && !node['cluster']['custom_awsbatchcli_package'].empty?
@@ -40,34 +48,37 @@ if !node['cluster']['custom_awsbatchcli_package'].nil? && !node['cluster']['cust
         custom_package_url=#{node['cluster']['custom_awsbatchcli_package']}
       fi
       curl --retry 3 -L -o aws-parallelcluster.tgz ${custom_package_url}
-      mkdir aws-parallelcluster-awsbatch-cli
-      tar -xzf aws-parallelcluster.tgz --directory aws-parallelcluster-awsbatch-cli
-      cd aws-parallelcluster-awsbatch-cli/*aws-parallelcluster-*
 
-      aws s3 cp #{node['cluster']['artifacts_build_url']}/PyPi/#{node['kernel']['machine']}/awsbatch-dependencies.tgz awsbatch-dependencies.tgz --region #{node['cluster']['region']}
       tar xzf awsbatch-dependencies.tgz
       cd awsbatch
       #{node['cluster']['awsbatch_virtualenv_path']}/bin/pip install * -f ./ --no-index
       cd ..
+
+      mkdir aws-parallelcluster-awsbatch-cli
+      tar -xzf aws-parallelcluster.tgz --directory aws-parallelcluster-awsbatch-cli
+      cd aws-parallelcluster-awsbatch-cli/*aws-parallelcluster-*
 
       #{node['cluster']['awsbatch_virtualenv_path']}/bin/pip install awsbatch-cli/
     CLI
   end
 else
   # Install aws-parallelcluster-awsbatch-cli package
+
+  remote_file "#{Chef::Config[:file_cache_path]}/aws-parallelcluster.tgz" do
+    source "#{node['cluster']['artifacts_s3_url']}/dependencies/awsbatch/aws-parallelcluster.tgz"
+    mode '0644'
+    retries 3
+    retry_delay 5
+    action :create_if_missing
+  end
+
   bash "install aws-parallelcluster-awsbatch-cli" do
     cwd Chef::Config[:file_cache_path]
     code <<-CLI
       set -e
-      package_url=#{node['cluster']['artifacts_build_url']}/awsbatch/aws-parallelcluster.tgz
-      aws s3 cp ${package_url} aws-parallelcluster.tgz --region #{node['cluster']['region']}
       mkdir aws-parallelcluster-awsbatch-cli
       tar -xzf aws-parallelcluster.tgz --directory aws-parallelcluster-awsbatch-cli
-      aws s3 cp #{node['cluster']['artifacts_build_url']}/PyPi/#{node['kernel']['machine']}/awsbatch-dependencies.tgz awsbatch-dependencies.tgz --region #{node['cluster']['region']}
-      tar xzf awsbatch-dependencies.tgz
-      cd awsbatch
-      #{node['cluster']['awsbatch_virtualenv_path']}/bin/pip install * -f ./ --no-index
-      cd ..
+
       cd aws-parallelcluster-awsbatch-cli/*aws-parallelcluster-*
       #{node['cluster']['awsbatch_virtualenv_path']}/bin/pip install awsbatch-cli/
     CLI
