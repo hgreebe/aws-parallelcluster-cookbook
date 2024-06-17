@@ -42,18 +42,18 @@ action :setup do
     not_if { efa_installed? }
   end
 
-  # update repos and install prerequisite packages
-  # package_repos 'update package repos' do
-  #   action :update
-  # end
-  # package prerequisites do
-  #   case node[:platform]
-  #   when 'amazon'
-  #     options('--disablerepo="epel"')
-  #   end
-  #   retries 3
-  #   retry_delay 5
-  # end
+  update repos and install prerequisite packages
+  package_repos 'update package repos' do
+    action :update
+  end
+  package prerequisites do
+    case node[:platform]
+    when 'amazon'
+      options('--disablerepo="epel"')
+    end
+    retries 3
+    retry_delay 5
+  end
   Chef::Log.info('EFA before action_and_install')
 
   action_download_and_install
