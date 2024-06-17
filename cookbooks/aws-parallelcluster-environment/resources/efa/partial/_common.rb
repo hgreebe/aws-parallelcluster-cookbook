@@ -42,7 +42,7 @@ action :setup do
     not_if { efa_installed? }
   end
 
-  update repos and install prerequisite packages
+  # update repos and install prerequisite packages
   package_repos 'update package repos' do
     action :update
   end
