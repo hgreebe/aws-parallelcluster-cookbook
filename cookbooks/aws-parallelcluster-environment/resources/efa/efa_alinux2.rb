@@ -26,6 +26,6 @@ action_class do
   end
 
   def prerequisites
-    %w(libibverbs-utils librdmacm-utils)
+    %w(environment-modules libibverbs-utils librdmacm-utils)
   end
 end
