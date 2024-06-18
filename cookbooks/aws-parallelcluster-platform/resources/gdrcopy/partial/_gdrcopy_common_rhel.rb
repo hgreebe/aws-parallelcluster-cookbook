@@ -17,8 +17,8 @@ def gdrcopy_service
 end
 
 def gdrcopy_build_dependencies
-  # %w(dkms rpm-build make check check-devel subunit subunit-devel)
-  %w(dkms rpm-build make check check-devel)
+  %w(dkms rpm-build make check check-devel subunit subunit-devel)
+  # %w(dkms rpm-build make check check-devel)
 end
 
 def installation_code

@@ -31,7 +31,7 @@ def default_packages
      gcc-gfortran git indent intltool patchutils rcs subversion swig systemtap curl
      jq wget python-pip NetworkManager-config-routing-rules
      python3 python3-pip iptables libcurl-devel yum-plugin-versionlock
-     coreutils environment-modules bzip2)
+     coreutils moreutils environment-modules bzip2)
 end
 
 action :install_extras do
@@ -41,16 +41,18 @@ action :install_extras do
     alinux_extras_topic topic
   end
 
-  # bash 'yum install missing deps' do
-  #   user 'root'
-  #   group 'root'
-  #   code <<-REQ
-  #   set -e
-  #   aws s3 cp #{node['cluster']['artifacts_build_url']}/epel/rhel7/#{node['kernel']['machine']}/epel_deps.tar.gz epel_deps.tar.gz --region #{node['cluster']['region']}
-  #   tar xzf epel_deps.tar.gz
-  #   cd epel
-  #   yum remove environment-modules moreutils subunit subunit-devel
-  #   yum install -y *
-  #   REQ
-  # end
+  bash 'yum install missing deps' do
+    user 'root'
+    group 'root'
+    code <<-REQ
+    set -e
+    aws s3 cp #{node['cluster']['artifacts_build_url']}/epel/rhel7/#{node['kernel']['machine']}/epel_deps.tar.gz epel_deps.tar.gz --region #{node['cluster']['region']}
+    tar xzf epel_deps.tar.gz
+    cd epel
+    yum install -y *
+    if [ $? -ne 1 ]; then   # Exit on any any error except 'nothing to do' 
+      exit 0
+    fi
+    REQ
+  end
 end
