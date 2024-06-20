@@ -29,14 +29,6 @@ action :run do
     recursive true
   end
 
-  remote_file "#{prefix}/Python-#{python_version}.tgz" do
-    source python_url
-    mode '0644'
-    retries 3
-    retry_delay 5
-    action :create_if_missing
-  end
-
   user = new_resource.user || 'root'
 
   bash "install python #{python_version}" do
@@ -44,12 +36,13 @@ action :run do
     group 'root'
     cwd "#{prefix}"
     code <<-VENV
-    set -e
-    tar -xzf Python-#{python_version}.tgz
-    cd Python-#{python_version}
-    ./configure --prefix=#{prefix}/versions/#{python_version}
-    make
-    make install
-    VENV
+      set -e
+      aws s3 cp #{node['cluster']['artifacts_build_url']}/python/Python-#{python_version}.tgz Python-#{python_version}.tgz --region #{node['cluster']['region']}
+      tar -xzf Python-#{python_version}.tgz
+      cd Python-#{python_version}
+      ./configure --prefix=#{prefix}/versions/#{python_version}
+      make
+      make install
+      VENV
   end
 end
