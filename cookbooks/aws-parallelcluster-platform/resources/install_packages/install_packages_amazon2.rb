@@ -50,7 +50,7 @@ action :install_extras do
     tar xzf epel_deps.tar.gz
     cd epel
     yum install -y *
-    if [ $? -ne 1 ]; then   # Exit on any any error except 'nothing to do' 
+    if [ $? -ne 1 ]; then   # Exit on any any error except 'nothing to do'
       exit 0
     fi
     REQ
