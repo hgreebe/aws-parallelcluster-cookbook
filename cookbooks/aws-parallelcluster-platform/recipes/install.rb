@@ -18,7 +18,7 @@ package_repos 'setup the repositories'
 include_recipe "aws-parallelcluster-platform::directories"
 install_packages 'Install OS and extra packages'
 include_recipe "aws-parallelcluster-platform::cookbook_virtualenv"
-#include_recipe "aws-parallelcluster-platform::awscli"
+include_recipe "aws-parallelcluster-platform::awscli"
 include_recipe "openssh"
 include_recipe "aws-parallelcluster-platform::disable_selinux"
 include_recipe "aws-parallelcluster-platform::license_readme"
