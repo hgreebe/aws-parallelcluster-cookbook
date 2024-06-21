@@ -56,7 +56,7 @@ action :setup do
 
   armpl_url = %W(
     #{node['cluster']['base_build_url']}
-    armpl/#{armpl_platform}
+    archives/armpl/#{armpl_platform}
     #{armpl_tarball_name}
   ).join('/')
 
