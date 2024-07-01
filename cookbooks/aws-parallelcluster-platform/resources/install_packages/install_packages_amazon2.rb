@@ -49,8 +49,7 @@ action :install_extras do
     aws s3 cp #{node['cluster']['artifacts_build_url']}/epel/rhel7/#{node['kernel']['machine']}/epel_deps.tar.gz epel_deps.tar.gz --region #{node['cluster']['region']}
     tar xzf epel_deps.tar.gz
     cd epel
-    yum remove environment-modules moreutils subunit subunit-devel
-    yum install -y *
+    yum install -y * 2>/dev/null
     REQ
   end
 end
