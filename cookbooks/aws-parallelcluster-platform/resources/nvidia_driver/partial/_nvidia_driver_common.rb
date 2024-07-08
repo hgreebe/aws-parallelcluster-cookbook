@@ -30,6 +30,7 @@ action :setup do
   bash 'get nvidia driver from s3' do
     user 'root'
     group 'root'
+    environment ENV.to_hash
     cwd "#{node['cluster']['sources_dir']}"
     code <<-NVIDIA
     set -e

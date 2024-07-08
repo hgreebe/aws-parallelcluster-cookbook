@@ -41,16 +41,16 @@ def default_packages
      coreutils curl environment-modules gcc gcc-c++ bzip2)
 end
 
-action :install_extras do
-  bash 'yum install missing deps' do
-    user 'root'
-    group 'root'
-    code <<-REQ
-    set -e
-    aws s3 cp #{node['cluster']['artifacts_build_url']}/epel/rhel8/#{node['kernel']['machine']}/epel_deps.tar.gz epel_deps.tar.gz --region #{node['cluster']['region']}
-    tar xzf epel_deps.tar.gz
-    cd epel
-    yum install -y * 2>/dev/null
-    REQ
-  end
-end
+# action :install_extras do
+#   bash 'yum install missing deps' do
+#     user 'root'
+#     group 'root'
+#     code <<-REQ
+#     set -e
+#     aws s3 cp #{node['cluster']['artifacts_build_url']}/epel/rhel8/#{node['kernel']['machine']}/epel_deps.tar.gz epel_deps.tar.gz --region #{node['cluster']['region']}
+#     tar xzf epel_deps.tar.gz
+#     cd epel
+#     yum install -y * 2>/dev/null
+#     REQ
+#   end
+# end
