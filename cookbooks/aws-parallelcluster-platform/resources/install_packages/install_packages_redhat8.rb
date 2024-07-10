@@ -30,10 +30,10 @@ def default_packages
   #    libical-devel sendmail libxml2-devel libglvnd-devel
   #    libgcrypt-devel libevent-devel glibc-static bind-utils
   #    iproute NetworkManager-config-routing-rules python3 python3-pip iptables libcurl-devel yum-plugin-versionlock
-  #    coreutils moreutils curl environment-modules gcc gcc-c++ bzip2)
+  #    coreutils moreutils curl environment-modules gcc gcc-c++ bzip2) R
   %w(vim ksh tcsh zsh openssl-devel ncurses-devel pam-devel net-tools
      libXmu-devel libdb-devel tcl-devel automake autoconf libtool
-     httpd boost-devel mlocate R atlas-devel
+     httpd boost-devel mlocate atlas-devel
      libffi-devel jq
      libical-devel sendmail libxml2-devel libglvnd-devel
      libgcrypt-devel libevent-devel bind-utils
@@ -41,16 +41,23 @@ def default_packages
      coreutils curl environment-modules gcc gcc-c++ bzip2)
 end
 
-# action :install_extras do
-#   bash 'yum install missing deps' do
-#     user 'root'
-#     group 'root'
-#     code <<-REQ
-#     set -e
-#     aws s3 cp #{node['cluster']['artifacts_build_url']}/epel/rhel8/#{node['kernel']['machine']}/epel_deps.tar.gz epel_deps.tar.gz --region #{node['cluster']['region']}
-#     tar xzf epel_deps.tar.gz
-#     cd epel
-#     yum install -y * 2>/dev/null
-#     REQ
-#   end
-# end
+action :install_extras do
+  remote_file "epel_deps.tar.gz" do
+    source "https://dut1b9icvluta.cloudfront.net/archives/dependencies/epel/rhel8/x86_64/epel_deps.tar.gz"
+    mode '0644'
+    retries 3
+    retry_delay 5
+    action :create_if_missing
+  end
+
+  bash 'yum install missing deps' do
+    user 'root'
+    group 'root'
+    code <<-REQ
+    set -e
+    tar xzf epel_deps.tar.gz
+    cd epel
+    yum install -y * 2>/dev/null
+    REQ
+  end
+end
