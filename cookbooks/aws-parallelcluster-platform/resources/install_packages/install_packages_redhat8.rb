@@ -43,7 +43,7 @@ end
 
 action :install_extras do
   remote_file "epel_deps.tar.gz" do
-    source "https://dut1b9icvluta.cloudfront.net/archives/dependencies/epel/rhel8/x86_64/epel_deps.tar.gz"
+    source "#{node['cluster']['artifacts_s3_url']}/dependencies/epel/rhel8/x86_64/epel_deps.tar.gz"
     mode '0644'
     retries 3
     retry_delay 5
