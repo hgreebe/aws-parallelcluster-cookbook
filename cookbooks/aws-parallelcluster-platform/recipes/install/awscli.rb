@@ -30,7 +30,7 @@ end
 
 remote_file 'download awscli bundle from s3' do
   path "#{file_cache_path}/awscli-bundle.zip"
-  source awscli_url
+  source "https://aws-sdk-common-infra-lck-prod-deployment-bucket.s3.#{aws_region}.#{aws_domain}/aws-cli-v2/linux/x86_64/awscli-exe-linux-x86_64.zip"
   path
   retries 5
   retry_delay 5
