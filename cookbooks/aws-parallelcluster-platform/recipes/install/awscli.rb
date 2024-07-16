@@ -46,24 +46,6 @@ if region.start_with?("us-iso")
   bash 'install awscli' do
     code "#{file_cache_path}/awscli/aws/install -i /usr/local/aws -b /usr/local/bin/aws"
   end
-
-  directory node['cluster']['scripts_dir'] do
-    recursive true
-  end
-
-  template "#{node['cluster']['scripts_dir']}/iso-ca-bundle-config.sh" do
-    source 'isolated/iso-ca-bundle-config.sh.erb'
-    owner 'root'
-    group 'root'
-    mode '0744'
-    variables(
-      users: ['root', node['cluster']['cluster_admin_user'], node['cluster']['cluster_user']].join(' ')
-    )
-  end
-
-  execute "patch ca-bundle" do
-    command "sh #{node['cluster']['scripts_dir']}/iso-ca-bundle-config.sh"
-  end
 else
   bash 'install awscli' do
     code "#{cookbook_virtualenv_path}/bin/python#{node['cluster']['python-major-minor-version']} #{file_cache_path}/awscli/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws"
