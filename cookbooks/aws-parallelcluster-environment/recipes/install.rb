@@ -23,7 +23,7 @@ Chef::Log.info('After EFA')
 raid 'Install RAID prerequisite packages'
 lustre 'Install FSx options'
 # efs 'Install efs-utils'
-stunnel 'Install stunnel'
+# stunnel 'Install stunnel'
 system_authentication "Install packages required for directory service integration"
 # TODO: Disable spack until the feature is complete
 # spack 'Install Spack'
