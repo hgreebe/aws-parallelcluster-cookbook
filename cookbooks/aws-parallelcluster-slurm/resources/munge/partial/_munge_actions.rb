@@ -20,12 +20,13 @@ unified_mode true
 default_action :setup
 
 munge_version = node['cluster']['munge']['munge_version']
-munge_url = "https://github.com/dun/munge/archive/munge-#{munge_version}.tar.gz"
+munge_url = "#{node['cluster']['munge']['base_url']}/munge-#{munge_version}.tar.gz"
 munge_tarball = "#{node['cluster']['sources_dir']}/munge-#{munge_version}.tar.gz"
 munge_user = node['cluster']['munge']['user']
 munge_user_id = node['cluster']['munge']['user_id']
 munge_group = node['cluster']['munge']['group']
 munge_group_id = node['cluster']['munge']['group_id']
+munge_sha256 = node['cluster']['munge']['sha256']
 
 action :setup do
   directory node['cluster']['sources_dir'] do
@@ -47,7 +48,6 @@ action :setup do
     action_purge_packages
     action_download_source_code
     action_compile_and_install
-    action_update_init_script
     action_set_user_and_group
     action_create_required_directories
   }
@@ -67,7 +67,7 @@ action :download_source_code do
     mode '0644'
     retries 3
     retry_delay 5
-    # TODO: Add version or checksum checks
+    checksum munge_sha256
     action :create_if_missing
   end
 end
@@ -89,19 +89,6 @@ action :compile_and_install do
       make install
     MUNGE
     not_if "/usr/sbin/munged --version | grep -q munge-#{munge_version} && ls #{munge_libdir}/libmunge*"
-  end
-end
-
-action :update_init_script do
-  # Updated munge init script for Amazon Linux
-  template '/etc/init.d/munge' do
-    source 'munge/munge-init.erb'
-    cookbook 'aws-parallelcluster-slurm'
-    owner 'root'
-    group 'root'
-    variables(munge_user: munge_user,
-              munge_group: munge_group)
-    mode '0755'
   end
 end
 

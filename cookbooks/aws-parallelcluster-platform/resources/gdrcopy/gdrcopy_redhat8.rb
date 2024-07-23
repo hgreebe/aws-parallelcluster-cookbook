@@ -23,6 +23,10 @@ def gdrcopy_enabled?
   nvidia_enabled?
 end
 
+def gdrcopy_build_dependencies
+  %w(rpm-build make check check-devel)
+end
+
 def gdrcopy_platform
   'el8'
 end
