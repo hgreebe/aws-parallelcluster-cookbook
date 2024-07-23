@@ -46,15 +46,15 @@ bash 'install awscli' do
   code "#{file_cache_path}/awscli/aws/install -i /usr/local/aws -b /usr/local/bin"
 end
 
-cookbook_file "#{node['cluster']['scripts_dir']}/iso-ca-bundle-config.sh" do
-  source 'isolated/iso-ca-bundle-config.sh'
-  cookbook 'aws-parallelcluster-platform'
-  owner 'root'
-  group 'root'
-  mode '0755'
-  action :create_if_missing
-end
-
-execute "patch ca bundle" do
-  command "sh #{node['cluster']['scripts_dir']}/iso-ca-bundle-config.sh"
-end
+# cookbook_file "#{node['cluster']['scripts_dir']}/iso-ca-bundle-config.sh" do
+#   source 'isolated/iso-ca-bundle-config.sh'
+#   cookbook 'aws-parallelcluster-platform'
+#   owner 'root'
+#   group 'root'
+#   mode '0755'
+#   action :create_if_missing
+# end
+#
+# execute "patch ca bundle" do
+#   command "sh #{node['cluster']['scripts_dir']}/iso-ca-bundle-config.sh"
+# end
