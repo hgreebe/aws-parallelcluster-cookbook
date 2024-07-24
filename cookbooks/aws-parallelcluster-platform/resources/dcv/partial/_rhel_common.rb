@@ -15,30 +15,62 @@
 
 def dcv_sha256sum
   if arm_instance?
-    '37aaaabfe1b8dde83254c738aa562b7eb7b1663cea09a53cedf9dabe5ddbb184'
+    case el_string
+    when "el7"
+      # ALINUX2
+      'f921c50a1f98fc945ac0f740f4181a52fb66b4b70bf13c1b2321823a9ec7e95a'
+    when "el8"
+      # RHEL and Rocky8
+      '4d4b794467220ec1b0f3272b6938701ce1282664e25f63497cc30632d71aed17'
+    when "el9"
+      # RHEL and Rocky9
+      'a74ee7376bf8595b95386352ff3f95eb5886e7bbc8b8512c53a48be1d3ec6282'
+    else
+      ''
+    end
   else
-    'e82e434a3f0c5d1a48d7cda2b6100ce51ae250d93b6a17b2fb81ba0fda463b3b'
+    case el_string
+    when "el7"
+      # ALINUX2
+      '31230edd66242038a95986c9207fc0f800986a94ee43bfc901e43521f4eb72a6'
+    when "el8"
+      # RHEL and Rocky8
+      '9f696bfc21fdfd267a079cd222170b7c737f789ec6f3da66a6666bc1d8fe2648'
+    when "el9"
+      # RHEL and Rocky9
+      '98a928194ff4c2ee21b52c3ab575ca93e60ca5475bd7bfda1561a5c6adffd7ca'
+    else
+      ''
+    end
+  end
+end
+
+def el_string
+  if platform?('amazon')
+    "el7"
+  else
+    "el#{node['platform_version'].to_i}"
   end
 end
 
 def dcv_package
-  "nice-dcv-#{node['cluster']['dcv']['version']}-el7-#{dcv_url_arch}"
+  "nice-dcv-#{node['cluster']['dcv']['version']}-#{el_string}-#{dcv_url_arch}"
 end
 
 def dcv_server
-  "nice-dcv-server-#{node['cluster']['dcv']['server']['version']}.el7.#{dcv_url_arch}.rpm"
+  "nice-dcv-server-#{node['cluster']['dcv']['server']['version']}.#{el_string}.#{dcv_url_arch}.rpm"
 end
 
 def xdcv
-  "nice-xdcv-#{node['cluster']['dcv']['xdcv']['version']}.el7.#{dcv_url_arch}.rpm"
+  "nice-xdcv-#{node['cluster']['dcv']['xdcv']['version']}.#{el_string}.#{dcv_url_arch}.rpm"
 end
 
 def dcv_web_viewer
-  "nice-dcv-web-viewer-#{node['cluster']['dcv']['web_viewer']['version']}.el7.#{dcv_url_arch}.rpm"
+  "nice-dcv-web-viewer-#{node['cluster']['dcv']['web_viewer']['version']}.#{el_string}.#{dcv_url_arch}.rpm"
 end
 
 def dcv_gl
-  "nice-dcv-gl-#{node['cluster']['dcv']['gl']['version']}.el7.#{dcv_url_arch}.rpm"
+  "nice-dcv-gl-#{node['cluster']['dcv']['gl']['version']}.#{el_string}.#{dcv_url_arch}.rpm"
 end
 
 action_class do
