@@ -36,6 +36,7 @@ if shared_home == 'none'
     volume "mount /home" do
       action :mount
       shared_dir '/home'
+      mode '1755'
       device(lazy { "#{node['cluster']['head_node_private_ip']}:#{node['cluster']['head_node_home_path']}" })
       fstype 'nfs'
       options node['cluster']['nfs']['hard_mount_options']
