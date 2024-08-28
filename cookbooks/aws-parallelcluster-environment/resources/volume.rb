@@ -79,7 +79,7 @@ action :mount do
   directory shared_dir do
     owner 'root'
     group 'root'
-    mode '1777'
+    mode mode new_resource.mode
   end
 end
 
