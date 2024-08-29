@@ -7,7 +7,6 @@ property :fstype, String, required: %i(mount)
 property :options, [Array, String], required: %i(mount)
 property :device_type, [String, Symbol], default: :device
 property :volume_id, String, required: %i(attach detach)
-property :mode, String, default: '1777'
 
 action :attach do
   volume_id = new_resource.volume_id.strip
@@ -43,7 +42,7 @@ action :mount do
   directory shared_dir do
     owner 'root'
     group 'root'
-    mode new_resource.mode
+    mode '1777'
     recursive true
     action :create
   end
@@ -79,7 +78,8 @@ action :mount do
   directory shared_dir do
     owner 'root'
     group 'root'
-    mode mode new_resource.mode
+    mode '1777'
+    only_if { node['cluster']['node_type'] == "HeadNode" }
   end
 end
 
