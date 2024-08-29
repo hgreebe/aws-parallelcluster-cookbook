@@ -17,7 +17,7 @@ provides :nvidia_dcgm, platform: 'ubuntu' do |node|
 end
 
 use 'partial/_nvidia_dcgm_common.rb'
-use 'partial/_nvidia_dcgm_debian.rb'
+# use 'partial/_nvidia_dcgm_debian.rb'
 
 def _nvidia_dcgm_enabled
   _nvidia_enabled
