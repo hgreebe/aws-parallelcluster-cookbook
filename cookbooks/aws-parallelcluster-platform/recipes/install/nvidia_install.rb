@@ -19,7 +19,7 @@ nvidia_driver 'Install Nvidia driver'
 
 include_recipe "aws-parallelcluster-platform::cuda"
 
-# gdrcopy 'Install Nvidia gdrcopy'
+gdrcopy 'Install Nvidia gdrcopy'
 
 fabric_manager 'Install Nvidia Fabric Manager'
 
