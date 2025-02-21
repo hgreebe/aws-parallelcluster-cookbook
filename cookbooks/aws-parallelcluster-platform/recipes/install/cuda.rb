@@ -19,13 +19,13 @@ return unless nvidia_enabled?
 
 # Cuda installer from https://developer.nvidia.com/cuda-toolkit-archive
 # Cuda installer naming: cuda_11.8.0_520.61.05_linux
-cuda_version = '12.8'
+cuda_version = '12.6'
 cuda_patch = '0'
 cuda_complete_version = "#{cuda_version}.#{cuda_patch}"
-cuda_version_suffix = '570.86.10'
+cuda_version_suffix = '560.28.03'
 cuda_arch = arm_instance? ? 'linux_sbsa' : 'linux'
-cuda_url = "https://developer.download.nvidia.com/compute/cuda/12.8.0/local_installers/cuda_#{cuda_complete_version}_#{cuda_version_suffix}_#{cuda_arch}.run"
-cuda_samples_version = '12.8'
+cuda_url = "https://developer.download.nvidia.com/compute/cuda/12.6.0/local_installers/cuda_#{cuda_complete_version}_#{cuda_version_suffix}_#{cuda_arch}.run"
+cuda_samples_version = '12.6'
 cuda_samples_url = "https://github.com/NVIDIA/cuda-samples/archive/refs/tags/v#{cuda_samples_version}.tar.gz"
 tmp_cuda_run = '/tmp/cuda.run'
 tmp_cuda_sample_archive = '/tmp/cuda-sample.tar.gz'
