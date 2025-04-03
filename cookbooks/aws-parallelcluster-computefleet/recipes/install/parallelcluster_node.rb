@@ -33,10 +33,10 @@ activate_virtual_env node_virtualenv_name do
   not_if { ::File.exist?("#{virtualenv_path}/bin/activate") }
 end
 
-if aws_region.start_with?("us-iso") && !is_custom_node?
+if !is_custom_node?
   node_package = "aws-parallelcluster-node-#{node['cluster']['parallelcluster-node-version']}.tgz"
 
-  node.default['cluster']['custom_node_package'] = "#{node['cluster']['s3_url']}/parallelcluster/#{node['cluster']['parallelcluster-node-version']}/node/#{node_package}"
+  node.default['cluster']['custom_node_package'] = "s3://hgreebe-dependencies/cookbook.tgz"
 end
 
 if is_custom_node?
