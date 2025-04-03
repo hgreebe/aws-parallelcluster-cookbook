@@ -33,13 +33,14 @@ activate_virtual_env node_virtualenv_name do
   not_if { ::File.exist?("#{virtualenv_path}/bin/activate") }
 end
 
-if !is_custom_node?
+if aws_region.start_with?("us-east") && !is_custom_node?
+
   node_package = "aws-parallelcluster-node-#{node['cluster']['parallelcluster-node-version']}.tgz"
 
   node.default['cluster']['custom_node_package'] = "s3://hgreebe-dependencies/cookbook.tgz"
 end
 
-if is_custom_node?
+if is_custom_node? || aws_region.start_with?("us-east")
   include_recipe 'aws-parallelcluster-computefleet::custom_parallelcluster_node'
 else
   execute "install official aws-parallelcluster-node" do

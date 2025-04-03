@@ -26,6 +26,7 @@ bash "install custom aws-parallelcluster-node" do
     set -e
     [[ ":$PATH:" != *":/usr/local/bin:"* ]] && PATH="/usr/local/bin:${PATH}"
     echo "PATH is $PATH"
+    echo "#{node['cluster']['custom_node_package']}"
     source #{node_virtualenv_path}/bin/activate
     pip uninstall --yes aws-parallelcluster-node
     if [[ "#{node['cluster']['custom_node_package']}" =~ ^s3:// ]]; then
