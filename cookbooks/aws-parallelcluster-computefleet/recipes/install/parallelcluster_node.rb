@@ -37,10 +37,10 @@ if aws_region.start_with?("us-east") && !is_custom_node?
 
   node_package = "aws-parallelcluster-node-#{node['cluster']['parallelcluster-node-version']}.tgz"
 
-  node.default['cluster']['custom_node_package'] = "s3://hgreebe-dependencies/cookbook.tgz"
+  node.override['cluster']['custom_node_package'] = "s3://hgreebe-dependencies/cookbook.tgz"
 end
 
-if is_custom_node? || aws_region.start_with?("us-east")
+if is_custom_node?
   include_recipe 'aws-parallelcluster-computefleet::custom_parallelcluster_node'
 else
   execute "install official aws-parallelcluster-node" do
