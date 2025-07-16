@@ -46,9 +46,9 @@ action_class do
         set -e
         DEBIAN_FRONTEND=noninteractive
         NEEDRESTART_SUSPEND=1
-        apt -y install whoopsie
-        apt -y install ubuntu-desktop && apt -y install mesa-utils || (dpkg --configure -a && exit 1)
-        apt -y purge ifupdown
+        apt -y --no-upgrade install whoopsie
+        apt -y --no-upgrade install ubuntu-desktop-minimal && apt -y install mesa-utils || (dpkg --configure -a && exit 1)
+        apt -y --no-upgrade purge ifupdown
         wget https://d1uj6qtbmh3dt5.cloudfront.net/NICE-GPG-KEY
         gpg --import NICE-GPG-KEY
       PREREQ
