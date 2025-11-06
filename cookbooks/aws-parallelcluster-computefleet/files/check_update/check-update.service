@@ -3,7 +3,7 @@ Description=Check for recent file modifications
 
 [Service]
 Type=oneshot
-ExecStart=/bin/bash -c 'cat /opt/slurm/etc/pcluster/.slurm_plugin/clustermgtd_heartbeat'
+ExecStart=/bin/bash -c "cat /opt/slurm/etc/pcluster/.slurm_plugin/clustermgtd_heartbeat 2>/dev/null || echo 'File does not exists' && true"
 
 [Install]
 WantedBy=multi-user.target
