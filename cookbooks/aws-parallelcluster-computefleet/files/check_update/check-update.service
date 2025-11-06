@@ -1,0 +1,9 @@
+[Unit]
+Description=Check for recent file modifications
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c 'cat /opt/slurm/etc/pcluster/.slurm_plugin/clustermgtd_heartbeat'
+
+[Install]
+WantedBy=multi-user.target
