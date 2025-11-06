@@ -1,0 +1,10 @@
+[Unit]
+Description=Check file modification time every minute
+
+[Timer]
+OnBootSec=20sec
+OnUnitActiveSec=20sec
+Unit=check-update.service
+
+[Install]
+WantedBy=timers.target

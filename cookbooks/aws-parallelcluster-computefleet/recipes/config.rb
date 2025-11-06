@@ -12,3 +12,7 @@
 # limitations under the License.
 
 include_recipe 'aws-parallelcluster-computefleet::fleet_status'
+
+if node['cluster']['node_type'] == 'ComputeFleet'
+  include_recipe 'aws-parallelcluster-computefleet::config_check_update_systemd_service'
+end
