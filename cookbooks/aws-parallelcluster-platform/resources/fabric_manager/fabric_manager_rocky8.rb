@@ -20,7 +20,7 @@ use 'partial/_fabric_manager_common.rb'
 use 'partial/_fabric_manager_install_rhel.rb'
 
 def fabric_manager_package
-  'nvidia-fabric-manager'
+  'nvidia-fabricmanager'
 end
 
 def fabric_manager_version
