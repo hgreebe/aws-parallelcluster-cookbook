@@ -39,6 +39,10 @@ def arch_suffix
   arm_instance? ? 'aarch64' : 'x86_64'
 end
 
+def arch
+  arm_instance? ? 'sbsa' : 'x86_64'
+end
+
 def nvidia_imex_url
-  "#{node['cluster']['artifacts_s3_url']}/dependencies/nvidia_imex/#{platform}/#{nvidia_imex_package}-#{nvidia_imex_full_version}.#{arch_suffix}.rpm"
+  "https://developer.download.nvidia.com/compute/cuda/repos/#{platform}/#{arch}/#{nvidia_imex_service}-#{nvidia_imex_full_version}.#{arch_suffix}.rpm"
 end
