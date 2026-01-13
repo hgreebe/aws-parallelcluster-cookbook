@@ -39,6 +39,10 @@ def arch_suffix
   arm_instance? ? 'aarch64' : 'x86_64'
 end
 
+def arch
+  arm_instance? ? 'sbsa' : 'x86_64'
+end
+
 def fabric_manager_url
-  "#{node['cluster']['artifacts_s3_url']}/dependencies/nvidia_fabric/#{platform}/#{fabric_manager_package}-#{fabric_manager_version}-1.#{arch_suffix}.rpm"
+  "https://developer.download.nvidia.com/compute/cuda/repos/#{platform}/#{arch}/#{fabric_manager_package}-#{fabric_manager_version}-1.#{arch_suffix}.rpm"
 end
