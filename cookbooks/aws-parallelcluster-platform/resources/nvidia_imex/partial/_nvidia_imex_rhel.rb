@@ -44,5 +44,5 @@ def arch
 end
 
 def nvidia_imex_url
-  "https://developer.download.nvidia.com/compute/cuda/repos/#{platform}/#{arch}/#{nvidia_imex_service}-#{nvidia_imex_full_version}.#{arch_suffix}.rpm"
+  "https://developer.download.nvidia.com/compute/cuda/repos/#{platform}/#{arch}/#{nvidia_imex_package}-#{nvidia_imex_full_version}.#{arch_suffix}.rpm"
 end
