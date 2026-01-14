@@ -56,6 +56,10 @@ def arch_suffix
   arm_instance? ? 'arm64' : 'amd64'
 end
 
+def arch
+  arm_instance? ? 'sbsa' : 'x86_64'
+end
+
 def package_version
   node['cluster']['nvidia']['dcgm_version']
 end

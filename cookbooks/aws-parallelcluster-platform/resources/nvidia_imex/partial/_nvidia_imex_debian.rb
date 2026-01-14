@@ -33,6 +33,10 @@ action :install_imex do
   end
 end
 
+def arch
+  arm_instance? ? 'sbsa' : 'x86_64'
+end
+
 def nvidia_imex_url
   "https://developer.download.nvidia.com/compute/cuda/repos/#{platform}/#{arch}/#{nvidia_imex_service}_#{nvidia_imex_full_version}_#{arch_suffix}.deb"
 end
