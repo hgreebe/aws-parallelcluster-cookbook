@@ -20,7 +20,7 @@ action :install_package do
                        end
   packages_urls_list.each do |package|
     remote_file "#{node['cluster']['sources_dir']}/#{package}-#{package_version}.deb" do
-      source "#{node['cluster']['artifacts_s3_url']}/dependencies/nvidia_dcgm/#{platform}/#{package}_#{package_version}_#{arch_suffix}.deb"
+      source "https://developer.download.nvidia.com/compute/cuda/repos/#{platform}/#{arch}/#{package}_#{package_version}_#{arch_suffix}.deb"
       mode '0644'
       retries 3
       retry_delay 5
