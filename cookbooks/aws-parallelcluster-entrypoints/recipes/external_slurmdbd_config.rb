@@ -36,3 +36,5 @@ include_recipe 'aws-parallelcluster-slurm::config_munge_key'
 include_recipe 'aws-parallelcluster-slurm::retrieve_slurmdbd_config_from_s3'
 
 include_recipe "aws-parallelcluster-slurm::config_slurm_accounting"
+
+include_recipe "aws-parallelcluster-slurm::bootstrap_slurm_accounting"

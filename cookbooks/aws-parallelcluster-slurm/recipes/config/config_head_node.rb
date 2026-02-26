@@ -203,6 +203,7 @@ include_recipe 'aws-parallelcluster-slurm::config_health_check'
 ruby_block "Configure Slurm Accounting" do
   block do
     run_context.include_recipe "aws-parallelcluster-slurm::config_slurm_accounting"
+    run_context.include_recipe "aws-parallelcluster-slurm::bootstrap_slurm_accounting"
   end
   not_if { node['cluster']['config'].dig(:Scheduling, :SlurmSettings, :Database).nil? }
 end unless on_docker?

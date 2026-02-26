@@ -270,6 +270,16 @@ execute "check slurmctld status" do
   retry_delay 2
 end
 
+# When slurmctld registers with slurmdbd, the cluster is created using slurmctld's cluster_id.
+# If we run `sacctmgr add cluster` before slurmctld registers, the DBD assigns a
+# different cluster_id, causing a "CLUSTER ID MISMATCH" error.
+ruby_block "Bootstrap Slurm Accounting" do
+  block do
+    run_context.include_recipe "aws-parallelcluster-slurm::bootstrap_slurm_accounting"
+  end
+  only_if { ::File.exist?(node['cluster']['previous_cluster_config_path']) && is_slurm_database_updated? && !node['cluster']['config'].dig(:Scheduling, :SlurmSettings, :Database).nil? }
+end unless on_docker?
+
 execute SCONTROL_RECONFIGURE_RESOURCE_NAME do
   command "#{node['cluster']['slurm']['install_dir']}/bin/scontrol reconfigure"
   retries 3

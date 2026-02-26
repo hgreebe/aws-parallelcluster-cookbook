@@ -19,6 +19,7 @@ recipes = %w(
       aws-parallelcluster-slurm::config_munge_key
       aws-parallelcluster-slurm::retrieve_slurmdbd_config_from_s3
       aws-parallelcluster-slurm::config_slurm_accounting
+      aws-parallelcluster-slurm::bootstrap_slurm_accounting
     )
 
 describe 'aws-parallelcluster-entrypoints::external_slurmdbd_config' do

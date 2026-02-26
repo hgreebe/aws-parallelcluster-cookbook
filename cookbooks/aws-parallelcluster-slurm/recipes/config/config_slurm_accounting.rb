@@ -15,6 +15,14 @@
 # OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This recipe configures and starts the slurmdbd service.
+# It must run BEFORE slurmctld starts so slurmctld can connect to slurmdbd.
+#
+# Database bootstrap (adding cluster/accounts/users) is handled by
+# bootstrap_slurm_accounting.rb which should be called after this recipe.
+# For cluster updates, bootstrap_slurm_accounting must run AFTER slurmctld restarts
+# to avoid cluster_id mismatch in Slurm 25.11+.
+
 template '/etc/systemd/system/slurmdbd.service' do
   source 'slurm/head_node/slurmdbd.service.erb'
   owner 'root'
@@ -75,51 +83,3 @@ service "slurmdbd" do
   supports restart: false
   action action
 end unless on_docker?
-
-file "/var/spool/slurm.state/clustername" do
-  action "delete"
-end
-
-if node['cluster']['slurmdbd_service_enabled'] == "true"
-  # After starting slurmdbd the database may not be fully responsive yet and
-  # its bootstrapping may fail. We need to wait for sacctmgr to successfully
-  # query the database before proceeding.
-  # In case of an external slurmdbd the Slurm commands do not work, so this
-  # check cannot be executed.
-  execute "wait for slurm database" do
-    command "#{node['cluster']['slurm']['install_dir']}/bin/sacctmgr show clusters -Pn"
-    retries node['cluster']['slurmdbd_response_retries']
-    retry_delay 10
-  end unless kitchen_test? || (node['cluster']['node_type'] == "ExternalSlurmDbd")
-
-  bash "bootstrap slurm database" do
-    user 'root'
-    group 'root'
-    code <<-BOOTSTRAP
-      SACCTMGR_CMD=#{node['cluster']['slurm']['install_dir']}/bin/sacctmgr
-      CLUSTER_NAME=#{node['cluster']['stack_name']}
-      DEF_ACCOUNT=pcdefault
-      SLURM_USER=#{node['cluster']['slurm']['user']}
-      DEF_USER=#{node['cluster']['cluster_user']}
-
-      # Add cluster to database if it is not present yet
-      [[ $($SACCTMGR_CMD show clusters -Pn cluster=$CLUSTER_NAME | grep $CLUSTER_NAME) ]] || \
-          $SACCTMGR_CMD -iQ add cluster $CLUSTER_NAME
-
-      # Add account-cluster association to database if it is not present yet
-      [[ $($SACCTMGR_CMD list associations -Pn cluster=$CLUSTER_NAME account=$DEF_ACCOUNT format=account | grep $DEF_ACCOUNT) ]] || \
-          $SACCTMGR_CMD -iQ add account $DEF_ACCOUNT Cluster=$CLUSTER_NAME \
-              Description="ParallelCluster default account" Organization="none"
-
-      # Add user-account associations to database if they are not present yet
-      [[ $($SACCTMGR_CMD list associations -Pn cluster=$CLUSTER_NAME account=$DEF_ACCOUNT user=$SLURM_USER format=user | grep $SLURM_USER) ]] || \
-          $SACCTMGR_CMD -iQ add user $SLURM_USER Account=$DEF_ACCOUNT AdminLevel=Admin
-      [[ $($SACCTMGR_CMD list associations -Pn cluster=$CLUSTER_NAME account=$DEF_ACCOUNT user=$DEF_USER format=user | grep $DEF_USER) ]] || \
-          $SACCTMGR_CMD -iQ add user $DEF_USER Account=$DEF_ACCOUNT AdminLevel=Admin
-
-      # sacctmgr might throw errors if the DEF_ACCOUNT is not associated to a cluster already defined on the database.
-      # This is not important for the scope of this script, so we return 0.
-      exit 0
-    BOOTSTRAP
-  end unless kitchen_test? || (node['cluster']['node_type'] == "ExternalSlurmDbd")
-end
