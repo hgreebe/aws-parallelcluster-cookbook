@@ -255,6 +255,14 @@ execute "update Slurm database password" do
   only_if { !(::File.exist?(node['cluster']['previous_cluster_config_path']) && !are_queues_updated?) && !node['cluster']['config'].dig(:Scheduling, :SlurmSettings, :Database).nil? }
 end
 
+# Delete clustername state file when adding accounting so slurmctld gets a new cluster_id from slurmdbd.
+# In Slurm 25.11+, the clustername file contains "cluster_id cluster_name". Without accounting,
+# cluster_id is 0. When adding accounting, we want slurmctld to get a proper cluster_id from the DBD.
+file "/var/spool/slurm.state/clustername" do
+  action :delete
+  only_if { is_slurm_database_updated? && !node['cluster']['config'].dig(:Scheduling, :SlurmSettings, :Database).nil? }
+end
+
 service 'slurmctld' do
   action :restart
   not_if { ::File.exist?(node['cluster']['previous_cluster_config_path']) && !are_queues_updated? && !are_bulk_custom_slurm_settings_updated? }
