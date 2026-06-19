@@ -15,6 +15,7 @@ This file is used to list changes made in each version of the AWS ParallelCluste
 
 **CHANGES**
 - Enforce NFSv4-only on the ParallelCluster-managed NFS server (head node). The NFSv3 client stack (rpcbind, rpc-statd, lockd) are unchanged, so cluster nodes can still mount external NFSv3 servers.
+- Install the NVIDIA driver and CUDA toolkit from the distribution package manager using NVIDIA local repo packages instead of the run file installers.
 - In GPU Health Check, skip DCGM diagnostics when NVIDIA MIG is enabled because dcgmi diag does not support MIG.
 - Upgrade Slurm to version 25.11.6 (from 25.11.4).
 - Upgrade EFA installer to 1.49.0 (from 1.47.0).
@@ -37,7 +38,7 @@ via custom Slurm settings or the cluster name contains upper-case letters.
 - Fix compute node bootstrap hanging without a clear error when the compute subnet cannot reach DynamoDB.
 - Fix login nodes not mounting `/opt/parallelcluster/shared` when EFS is used as the internal shared storage type.
 - Fix SELinux not actually being disabled on RHEL-family OSes (kernels >= 6.4) due to a [deprecated mechanism](https://github.com/SELinuxProject/selinux-kernel/wiki/DEPRECATE-runtime-disable) being silently ignored by newer kernels.
-- Fix `build-image` failure by skipping installation of `gdrcopy` and `dcgm` if parent image has an existing installed version.
+- Fix `build-image` failure by skipping installation of `fabric-manager`, `gdrcopy` and `dcgm` if parent image has an existing installed version.
 
 **DEPRECATIONS**
 - Amazon Linux 2 is no longer supported.
