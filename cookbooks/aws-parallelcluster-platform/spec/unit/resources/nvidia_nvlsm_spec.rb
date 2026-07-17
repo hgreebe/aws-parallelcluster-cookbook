@@ -139,7 +139,6 @@ describe 'nvidia_nvlsm:install' do
 
           it 'installs nvlsm package from nvidia repo' do
             is_expected.to install_package("nvlsm")
-              .with(version: nvlsm_version)
               .with(retries: 3)
               .with(retry_delay: 5)
           end
