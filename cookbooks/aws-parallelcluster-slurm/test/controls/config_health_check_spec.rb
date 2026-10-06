@@ -29,6 +29,9 @@ control 'health_check_configured' do
   describe file("#{slurm_install_dir}/etc/pcluster/.slurm_plugin/scripts/prolog.d/90_pcluster_health_check_manager") do
     it { should exist }
     its('mode') { should cmp '0755' }
+    # By default, a job waits for a running health check and checks only the GPUs not in use by other jobs.
+    its('content') { should match /^WAIT_EXEC=true$/ }
+    its('content') { should match /^export PCLUSTER_GPU_HEALTH_CHECK_SKIP_BUSY_GPUS=true$/ }
   end
   describe file("#{slurm_install_dir}/etc/pcluster/.slurm_plugin/scripts/epilog.d/90_pcluster_noop") do
     it { should exist }

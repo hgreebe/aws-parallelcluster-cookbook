@@ -38,3 +38,7 @@ default['cluster']['p6egb200_block_sizes'] = nil
 
 # Slurm Reconfigure
 default['cluster']['slurm']['reconfigure_timeout'] = 300 # seconds
+
+# GPU health check: when true, restore the previous behavior, where a job that starts while another check is running
+# skips its own check, and a job without GPU GRES checks every GPU on the node, including GPUs in use by other jobs.
+default['cluster']['gpu_health_check']['legacy_behavior'] = false

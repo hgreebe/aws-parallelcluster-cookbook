@@ -13,6 +13,10 @@ This file is used to list changes made in each version of the AWS ParallelCluste
 
 **BUG FIXES**
 - Fix cluster update hanging on the `fuser` probe that ran before every shared storage unmount when the storage was unresponsive.
+- Fix the GPU health check so that it does not interfere with running jobs and does not let jobs start unvalidated:
+  a job without GPU GRES now checks only the GPUs not in use by other jobs, and a job that starts while another
+  check is running now waits for it instead of skipping its own check. The previous behavior can be restored by
+  setting the Chef attribute `cluster.gpu_health_check.legacy_behavior` to `true`.
 - Set mode `0440` on all ParallelCluster-managed files under `/etc/sudoers.d/`.
 
 3.16.1

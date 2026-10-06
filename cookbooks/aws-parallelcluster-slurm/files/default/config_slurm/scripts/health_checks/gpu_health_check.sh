@@ -58,10 +58,21 @@ function main() {
 
   ## Check if there are GPU associated to the job
   if [ -z "$GPU_DEVICE_ORDINAL" ]; then
-    ## nvidia-smi --query-gpu=index --format=csv,noheader returns the list of GPU indices,
-    ## that we transform to a comma separated list.
-    GPU_DEVICE_ORDINAL=$(nvidia-smi --query-gpu=index --format=csv,noheader | tr '\n' ',' | sed 's/,$//')
-    log_info "The variable GPU_DEVICE_ORDINAL has been initialized using information provided by nvidia-smi"
+    if [ "$PCLUSTER_GPU_HEALTH_CHECK_SKIP_BUSY_GPUS" = true ]; then
+      ## The job did not request GPU GRES, so Slurm does not tell which GPUs it holds.
+      ## Check only the GPUs not in use by other jobs: the DCGM diagnostic is invasive and would interfere
+      ## with a running job, and it would also fail on a busy but healthy GPU.
+      GPU_DEVICE_ORDINAL=$(idle_gpus)
+      if [ -z "$GPU_DEVICE_ORDINAL" ]; then
+        fast_success_exit 1 "All GPUs on the node are in use by other jobs: skipping the GPU Health Check."
+      fi
+      log_info "The variable GPU_DEVICE_ORDINAL has been initialized with the GPUs not in use by other jobs"
+    else
+      ## nvidia-smi --query-gpu=index --format=csv,noheader returns the list of GPU indices,
+      ## that we transform to a comma separated list.
+      GPU_DEVICE_ORDINAL=$(nvidia-smi --query-gpu=index --format=csv,noheader | tr '\n' ',' | sed 's/,$//')
+      log_info "The variable GPU_DEVICE_ORDINAL has been initialized using information provided by nvidia-smi"
+    fi
   fi
   log_info "The value of GPU_DEVICE_ORDINAL is '${GPU_DEVICE_ORDINAL}'"
 
@@ -164,6 +175,28 @@ function is_dcgm_supported() {
   fi
 
   return 0
+}
+
+function idle_gpus() {
+  ## Prints the comma separated indices of the GPUs with no running compute process.
+  ## Logs go to stderr because the output of this function is captured.
+  ##
+  ## $ nvidia-smi --query-compute-apps=gpu_uuid --format=csv,noheader
+  ## GPU-931c0765-01f6-f7af-00df-fb4202cec8b9
+  ## $ nvidia-smi --query-gpu=index,uuid --format=csv,noheader
+  ## 0, GPU-931c0765-01f6-f7af-00df-fb4202cec8b9
+  ## 1, GPU-2b1e4f7a-5c3d-4e8f-9a0b-1c2d3e4f5a6b
+  local busy_gpu_uuids gpu_index gpu_uuid
+  local idle_gpu_indices=()
+  busy_gpu_uuids=$(nvidia-smi --query-compute-apps=gpu_uuid --format=csv,noheader)
+  while IFS=', ' read -r gpu_index gpu_uuid; do
+    if grep -qxF "$gpu_uuid" <<< "$busy_gpu_uuids"; then
+      log_info "Skipping GPU '${gpu_index}' (${gpu_uuid}): it is in use by another job" >&2
+    else
+      idle_gpu_indices+=("$gpu_index")
+    fi
+  done < <(nvidia-smi --query-gpu=index,uuid --format=csv,noheader)
+  (IFS=,; echo "${idle_gpu_indices[*]}")
 }
 
 function is_mig_enabled() {

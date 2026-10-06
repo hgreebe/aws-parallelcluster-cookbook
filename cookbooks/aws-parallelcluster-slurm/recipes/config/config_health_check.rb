@@ -100,7 +100,8 @@ template "#{node['cluster']['slurm']['install_dir']}/etc/pcluster/.slurm_plugin/
   group 'root'
   mode '0755'
   variables(
-    node_spec_file: "#{node['cluster']['slurm_plugin_dir']}/slurm_node_spec.json"
+    node_spec_file: "#{node['cluster']['slurm_plugin_dir']}/slurm_node_spec.json",
+    gpu_health_check_legacy_behavior: node['cluster']['gpu_health_check']['legacy_behavior'].to_s == 'true'
   )
 end
 

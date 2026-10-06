@@ -11,15 +11,24 @@
 # OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions and
 # limitations under the License.
 
-WAIT_EXEC=false
+# Wait for the health checks already running on the node instead of skipping, so that every job validates
+# its own GPUs. There is no wait timeout: the lock is held only while a health check runs, and every
+# health check is bounded by the Health Check Manager timeout.
+# The legacy behavior (skip when another check is running) can be restored with the
+# cluster.gpu_health_check.legacy_behavior Chef attribute.
+WAIT_EXEC=<%= @gpu_health_check_legacy_behavior ? 'false' : 'true' %>
 DEBUG=false
+
+# Read by gpu_health_check.sh: when true, a job without GPU GRES skips the GPUs in use by other jobs.
+export PCLUSTER_GPU_HEALTH_CHECK_SKIP_BUSY_GPUS=<%= @gpu_health_check_legacy_behavior ? 'false' : 'true' %>
 
 LOG_FILE_PATH="/var/log/parallelcluster/slurm_health_check.log"
 FLOCK_FILE_DESCRIPTOR_NUMBER=10
 
 flock_params=(-n)
 if [ "${WAIT_EXEC}" = true ]; then
-  flock_params=(-w 600)
+  # Block until the lock is free
+  flock_params=()
 fi
 
 function _log() {
@@ -37,7 +46,11 @@ function log_error() {
 }
 
 function manage_concurrency() {
-  log_info "There is another running instance of ParallelCluster Health Check Manager for queue (${PCLUSTER_SCHEDULER_QUEUE_NAME}) and compute resource (${PCLUSTER_SCHEDULER_COMPUTE_RESOURCE_NAME}), exiting gracefully..."
+  if [ "${WAIT_EXEC}" = true ]; then
+    log_error "Unable to acquire the ParallelCluster Health Check Manager lock for queue (${PCLUSTER_SCHEDULER_QUEUE_NAME}) and compute resource (${PCLUSTER_SCHEDULER_COMPUTE_RESOURCE_NAME}), exiting gracefully..."
+  else
+    log_info "There is another running instance of ParallelCluster Health Check Manager for queue (${PCLUSTER_SCHEDULER_QUEUE_NAME}) and compute resource (${PCLUSTER_SCHEDULER_COMPUTE_RESOURCE_NAME}), exiting gracefully..."
+  fi
   exit 0
 }
 
