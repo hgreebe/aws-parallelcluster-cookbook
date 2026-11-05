@@ -17,6 +17,9 @@ This file is used to list changes made in each version of the AWS ParallelCluste
   (launch templates, security groups, subnets and their routing, IAM roles and policies, custom action scripts,
   existing shared storage), warning about the ones the credentials do not allow reading.
 
+**CHANGES**
+- Upgrade DCV to version 2026.0-25174 (from 2025.0-20103).
+
 3.16.2
 ------
 
